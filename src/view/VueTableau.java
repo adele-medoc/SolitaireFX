@@ -26,26 +26,26 @@ public class VueTableau {
 	ArrayList<Carte> carteSurTableau = new ArrayList<Carte>();
 	BorderPane root = new BorderPane();
 	
-	HBox pioche = new HBox();
-	VBox carteDevoile= new VBox();
-	VBox cartesCache= new VBox();
-	
-	HBox pileFondation = new HBox();
-	VBox pileCoeur = new VBox();
-	VBox pilePique = new VBox();
-	VBox pileCarreau = new VBox();
-	VBox pileTrefle = new VBox();
-	
 	GridPane  hautTableauJeu = new GridPane ();
+		HBox pioche = new HBox();
+		VBox carteDevoile= new VBox();
+		VBox cartesCache= new VBox();
+	
+		HBox pileFondation = new HBox();
+		VBox pileCoeur = new VBox();
+		VBox pilePique = new VBox();
+		VBox pileCarreau = new VBox();
+		VBox pileTrefle = new VBox();
+	
 	GridPane  basTableauJeu = new GridPane ();
 	
-	VBox colonne1 = new VBox();
-	VBox colonne2 = new VBox();
-	VBox colonne3 = new VBox();
-	VBox colonne4 = new VBox();
-	VBox colonne5 = new VBox();
-	VBox colonne6 = new VBox();
-	VBox colonne7 = new VBox();
+		VBox colonne1 = new VBox();
+		VBox colonne2 = new VBox();
+		VBox colonne3 = new VBox();
+		VBox colonne4 = new VBox();
+		VBox colonne5 = new VBox();
+		VBox colonne6 = new VBox();
+		VBox colonne7 = new VBox();
 	
 	ArrayList<ArrayList<Carte>> ListCat= new ArrayList<ArrayList<Carte>>();
 	ArrayList<Carte> carteCol1 = new ArrayList<Carte>();
@@ -114,40 +114,7 @@ public class VueTableau {
 				}		 
 			}
 			
-			afficherDerniereCarteColonne();
-			
-			
-//			for(VBox col : listColl) {
-//				for(int i =0; i< listColl.get(i).getChildren().size()-1;i++){}
-//				col.getChildren().getLast().setOnDragOver(new EventHandler<>() {
-//				    public void handle(DragEvent event) {
-//				        Dragboard db = event.getDragboard();
-//				        if (db.hasString()) {
-//				            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-//				        }
-//				        event.consume();
-//				    }
-//
-//						
-//					});
-//
-//				col.setOnDragDropped(new EventHandler<>() {
-//				    public void handle(DragEvent event) {
-//				        Dragboard db = event.getDragboard();
-//				        boolean success = false;
-//				        if (db.hasString()) {
-//				            System.out.println("Dropped: " + db.getString());
-//				            success = true;
-//				        }
-//				        event.setDropCompleted(success);
-//				        event.consume();
-//				    }
-//
-//				});
-//			}
-			
-			
-		
+			afficherDerniereCarteColonne();		
 
 		//carteDepart.subList(0, cpt).clear();
 		System.out.println("VueTableau : carte restant dans carteDépart : "+ carteDepart.size() +"carteSurTableau : "+carteSurTableau.size()+" carte de départ : "+ carteDepart.toString());
@@ -259,7 +226,34 @@ public class VueTableau {
 		});
 		
 	}
-	
+//	for(VBox col : listColl) {
+//		for(int i =0; i< listColl.get(i).getChildren().size()-1;i++){}
+//		col.getChildren().getLast().setOnDragOver(new EventHandler<>() {
+//		    public void handle(DragEvent event) {
+//		        Dragboard db = event.getDragboard();
+//		        if (db.hasString()) {
+//		            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+//		        }
+//		        event.consume();
+//		    }
+//
+//				
+//			});
+//
+//		col.setOnDragDropped(new EventHandler<>() {
+//		    public void handle(DragEvent event) {
+//		        Dragboard db = event.getDragboard();
+//		        boolean success = false;
+//		        if (db.hasString()) {
+//		            System.out.println("Dropped: " + db.getString());
+//		            success = true;
+//		        }
+//		        event.setDropCompleted(success);
+//		        event.consume();
+//		    }
+//
+//		});
+//	}
 }
 
 
