@@ -1,0 +1,70 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+/* --------------------- CSS générale ------------------------------- */
+.titre{
+	-fx-font-size: 100px; 
+	-fx-font-weight: bold;
+	-fx-text-fill: #F3AA27;
+}
+
+.bg{
+    -fx-background-color : #EBFFA9;
+    -fx-padding : 20; 
+	-fx-spacing : 15; 
+}
+
+.carte{
+	-fx-background-color: red;
+	-fx-alignment : center;
+	
+	
+}
+
+.conteneur{
+	-fx-padding : 5;
+	-fx-border-color : #F3AA27;
+}
+
+/* ---------------------Page Accueil ------------------------------- */
+.accueil{
+	-fx-padding: 20; 
+	 -fx-spacing: 15; 
+}
+
+.buttonVb{
+	-fx-padding: 20; 
+	 -fx-spacing: 15; 
+}
+
+.boutonAccueil{
+	-fx-background-color: linear-gradient(to bottom, #FFD94A, #FFC808);
+	-fx-text-alignment: center;
+	-fx-font-weight: bold;
+	-fx-text-fill: #FFF9EB;
+	-fx-border-radius: 8px;
+	-fx-background-radius: 8px;
+	-fx-font-size: 50px;
+	-fx-cursor: hand;
+	-fx-padding: 2px 3px 2px 3px;
+	
+}
+
+.boutonAccueil:hover {
+	-fx-background-color: linear-gradient(to bottom, #FBC02D, #F9B918);
+	-fx-text-fill: #f5f5f5;
+	-fx-background-radius: 8px;
+	-fx-border-radius: 8px;
+	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.3, 3, 3);
+    -fx-scale-x: 1.05; 
+    -fx-scale-y: 1.05;
+}
+
+.boutonAccueil:pressed {
+	-fx-background-color: #F3AA27;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.6), 8, 0.3, 2, 2);
+    -fx-scale-x: 1.00;
+    -fx-scale-y: 1.00;
+}
+
+/* --------------------- Tableau Solitaire ------------------------------- */
+
+
