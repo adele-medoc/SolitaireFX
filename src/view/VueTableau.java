@@ -6,6 +6,7 @@ import application.Main;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -38,7 +39,8 @@ public class VueTableau {
 		VBox pileTrefle = new VBox();
 	
 	GridPane  basTableauJeu = new GridPane ();
-	
+		
+	ArrayList<VBox> listColl = new ArrayList<VBox>();
 		VBox colonne1 = new VBox();
 		VBox colonne2 = new VBox();
 		VBox colonne3 = new VBox();
@@ -47,16 +49,16 @@ public class VueTableau {
 		VBox colonne6 = new VBox();
 		VBox colonne7 = new VBox();
 	
-	ArrayList<ArrayList<Carte>> ListCat= new ArrayList<ArrayList<Carte>>();
-	ArrayList<Carte> carteCol1 = new ArrayList<Carte>();
-	ArrayList<Carte> carteCol2 = new ArrayList<Carte>();
-	ArrayList<Carte> carteCol3 = new ArrayList<Carte>();
-	ArrayList<Carte> carteCol4 = new ArrayList<Carte>();
-	ArrayList<Carte> carteCol5 = new ArrayList<Carte>();
-	ArrayList<Carte> carteCol6 = new ArrayList<Carte>();
-	ArrayList<Carte> carteCol7 = new ArrayList<Carte>();
+//	ArrayList<ArrayList<Carte>> ListCarte= new ArrayList<ArrayList<Carte>>();
+//	ArrayList<Carte> carteCol1 = new ArrayList<Carte>();
+//	ArrayList<Carte> carteCol2 = new ArrayList<Carte>();
+//	ArrayList<Carte> carteCol3 = new ArrayList<Carte>();
+//	ArrayList<Carte> carteCol4 = new ArrayList<Carte>();
+//	ArrayList<Carte> carteCol5 = new ArrayList<Carte>();
+//	ArrayList<Carte> carteCol6 = new ArrayList<Carte>();
+//	ArrayList<Carte> carteCol7 = new ArrayList<Carte>();
 	
-	ArrayList<VBox> listColl = new ArrayList<VBox>();
+	
 	
 	//---------------------------------------CONSTRUCTEUR-----------------------------------------------------------------------
 	
@@ -85,39 +87,33 @@ public class VueTableau {
 		listColl.add(colonne6);
 		listColl.add(colonne7);
 		
-		ListCat.add(carteCol1);
-		ListCat.add(carteCol2);
-		ListCat.add(carteCol3);
-		ListCat.add(carteCol4);
-		ListCat.add(carteCol5);
-		ListCat.add(carteCol6);
-		ListCat.add(carteCol7);
-		
 		pioche.getChildren().addAll(cartesCache,carteDevoile);
 		pioche.setPadding(new Insets(0, 10, 0, 10));
 		pileFondation.getChildren().addAll(pileCoeur,pilePique,pileCarreau,pileTrefle );
 		
-		System.out.println("VueTableau: taille du jeu avant de distribuer les carte :"+ carteDepart.size());
+		System.out.println("VueTableau / taille du jeu avant de distribuer les carte : "+ carteDepart.size());
 		
 			
 			for(int i=0;i<7;i++) {
 				
 				for(int j=0;j< i+1;j++) {
 					
-						ListCat.get(i).add(carteDepart.getLast());
-						listColl.get(i).getChildren().add(afficherImage(ListCat.get(i).getLast().getImg_carte_verso()));
-//						System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! colonne " +i+"      "+ ListCat.get(i) +"listColl " + listColl.get(i));
-						carteSurTableau.add(carteDepart.getLast());
+//					ListCarte.get(i).add(carteDepart.getLast());
+						listColl.get(i).getChildren().add(creerImageCarteVerso(carteDepart.getLast()));
+//						System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! colonne " +i+" listColl " + listColl.get(i));
+						carteSurTableau.add(carteDepart.getLast());				
 						carteDepart.remove(carteDepart.getLast());
 //						System.out.println("\n VueTableau: i = "+i+" j =" +j + "  taille du jeu : "+ carteDepart.size()); 
 //						System.out.println("VueTableau: taille carteSurTableau : "+ carteSurTableau.size()+ "  carte ajouté : "+ carteSurTableau.toString()+"\n "); 
+						
 				}		 
 			}
 			
 			afficherDerniereCarteColonne();		
+			
 
 		//carteDepart.subList(0, cpt).clear();
-		System.out.println("VueTableau : carte restant dans carteDépart : "+ carteDepart.size() +"carteSurTableau : "+carteSurTableau.size()+" carte de départ : "+ carteDepart.toString());
+		System.out.println("VueTableau / carte restant dans carteDépart : "+ carteDepart.size() +" carteSurTableau : "+carteSurTableau.size()+"    carte de départ : "+ carteDepart.toString());
 			
 		
 		colonne1.setSpacing(-200);
@@ -167,6 +163,7 @@ public class VueTableau {
 	}
 	
 
+	
 	public void afficherNouvelleCartePioche(Carte carte) {
 		String imgCarte;
 		imgCarte = carte.getImg_carte();
@@ -190,69 +187,82 @@ public class VueTableau {
 		ImageView imgViewCarte = new ImageView(imgCarte);
 		imgViewCarte.setFitHeight(244);
 		imgViewCarte.setFitWidth(170);
+		
 		return imgViewCarte;
-		}catch(Exception e) {System.out.println("VueTableau: fonction afficherImg()"+ e);
+		}catch(Exception e) {System.out.println("VueTableau: fonction afficherImg(string)"+ e);
 		return null;
 		}		
 	}
-
-	public void afficherDerniereCarteColonne() {
-		
-		for(int i=0;i<listColl.size();i++) {
-			var children = listColl.get(i).getChildren();
-			if (!children.isEmpty()) {
-			    children.remove(children.size() - 1); 
-			    children.add(afficherImage(ListCat.get(i).getLast().getImg_carte()));
+	
+	public ImageView creerImageCarteVerso(Carte carte) {
+		try {
+			Image imgCarte = new Image(getClass().getResource("/images/"+carte.getImg_carte_verso()).toExternalForm());
+			ImageView imgViewCarte = new ImageView(imgCarte);
+			imgViewCarte.setFitHeight(244);
+			imgViewCarte.setFitWidth(170);
+			imgViewCarte.setUserData(carte); 
+			return imgViewCarte;
+			}catch(Exception e) {System.out.println("VueTableau: fonction afficherImg(carte)"+ e);
+			return null;
 			}
-		}
-		
+	}
+
+	// FONCTION POUR AFFICHER LA DERNIERE CARTE COTE RECTO ET LA RENDRE DRAGGABLE
+	public void afficherDerniereCarteColonne() {
+		for(int i=0;i<listColl.size();i++) {
+			System.out.println("i = "+i+"   listColl.get(i) = " + listColl.get(i).getChildren().getLast() + "   User data = " +listColl.get(i).getChildren().getLast().getUserData());
+			Carte derniereCarte = (Carte) listColl.get(i).getChildren().getLast().getUserData();
+			listColl.get(i).getChildren().remove(listColl.get(i).getChildren().getLast());
+			listColl.get(i).getChildren().add(afficherImage(derniereCarte.getImg_carte()));
+			ImageView ivDerniereCarte = (ImageView) listColl.get(i).getChildren().getLast();
+			ivDerniereCarte.setOnDragDetected(new EventHandler<MouseEvent>() {
+			    public void handle(MouseEvent event) {
+			        /* drag was detected, start a drag-and-drop gesture*/
+			        /* allow any transfer mode */
+			        Dragboard db = ivDerniereCarte.startDragAndDrop(TransferMode.ANY);
+			        /* Put a string on a dragboard */
+			        ClipboardContent content = new ClipboardContent();
+			        content.putString("drag drag ");
+	                db.setContent(content);
+	                event.consume();
+			    
+			    }
+			});
+			ivDerniereCarte.setOnDragOver(new EventHandler<DragEvent>() {
+			    public void handle(DragEvent event) {
+			        /* data is dragged over the target */
+			        /* accept it only if it is not dragged from the same node 
+			         * and if it has a string data */
+			        if (event.getGestureSource() != ivDerniereCarte &&
+			                event.getDragboard().hasString()) {
+			        	
+			            /* allow for both copying and moving, whatever user chooses */
+			            event.acceptTransferModes(TransferMode.MOVE);
+			        }
+			        
+			        event.consume();
+			    }
+			});
+		}	
 	}
 	// fonction pour déplacer une carte vers une autre colonne
-	public void creerDragDropEvent(ImageView source,ImageView target){
-		source.setOnDragDetected(new EventHandler<MouseEvent>() {
-		    public void handle(MouseEvent event) {
-		        /* drag was detected, start a drag-and-drop gesture*/
-		        /* allow any transfer mode */
-		        Dragboard db = source.startDragAndDrop(TransferMode.ANY);
-		        
-		        /* Put a string on a dragboard */
-		        ClipboardContent content = new ClipboardContent();
-		        content.putString(source.getId());
-		        System.out.println(source.getId());
-		        db.setContent(content);
-		        
-		        event.consume();
-		    }
-		});
-		
-	}
-//	for(VBox col : listColl) {
-//		for(int i =0; i< listColl.get(i).getChildren().size()-1;i++){}
-//		col.getChildren().getLast().setOnDragOver(new EventHandler<>() {
-//		    public void handle(DragEvent event) {
-//		        Dragboard db = event.getDragboard();
-//		        if (db.hasString()) {
-//		            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-//		        }
+//	public void creerDragDropEvent(ImageView source,ImageView target){
+//		source.setOnDragDetected(new EventHandler<MouseEvent>() {
+//		    public void handle(MouseEvent event) {
+//		        /* drag was detected, start a drag-and-drop gesture*/
+//		        /* allow any transfer mode */
+//		        Dragboard db = source.startDragAndDrop(TransferMode.MOVE);
+//		        
+//		        /* Put a string on a dragboard */
+//		        ClipboardContent content = new ClipboardContent();
+//		        content.putString(source.getId());
+//		        System.out.println(source.getId());
+//		        db.setContent(content);
+//		        
 //		        event.consume();
 //		    }
-//
-//				
-//			});
-//
-//		col.setOnDragDropped(new EventHandler<>() {
-//		    public void handle(DragEvent event) {
-//		        Dragboard db = event.getDragboard();
-//		        boolean success = false;
-//		        if (db.hasString()) {
-//		            System.out.println("Dropped: " + db.getString());
-//		            success = true;
-//		        }
-//		        event.setDropCompleted(success);
-//		        event.consume();
-//		    }
-//
 //		});
+//		
 //	}
 }
 
