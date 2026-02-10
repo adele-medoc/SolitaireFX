@@ -57,7 +57,6 @@ public class Jeu_Solitaire {
 		this.paquet = paquet;
 	}
 
-	public void peutDeplacerCarte() {}
 	public void tirerCartePioche() {}
 	
 	
