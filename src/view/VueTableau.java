@@ -1,13 +1,14 @@
 package view;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import application.Main;
 import controller.ControllerTableau;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
@@ -16,19 +17,23 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.Carte;
 import models.ImageCarte;
+import utilitaire.Utility;
 
 public class VueTableau {
 	//-----------------------------------------ATTRIBUTS---------------------------------------------------------------------
-	ArrayList<Carte> carteDepart;
-	ArrayList<Carte> carteSurTableau = new ArrayList<Carte>();
+	ControllerTableau controller;
+	//ArrayList<Carte> carteDepart;
+	List<Carte> carteDepart = new ArrayList<Carte>();
+	List<Carte> carteSurTableau = new ArrayList<Carte>();
 	BorderPane root = new BorderPane();
 	
 	GridPane  hautTableauJeu = new GridPane ();
 		HBox pioche = new HBox();
-		VBox carteDevoile= new VBox();
-		VBox cartesCache= new VBox();
-	
-		HBox pileFondation = new HBox();
+		VBox carteDevoilePioche= new VBox();
+		VBox cartesCachePioche= new VBox();
+		int cptPioche = -1;
+
+	HBox pileFondation = new HBox();
 		VBox pileCoeur = new VBox();
 		VBox pilePique = new VBox();
 		VBox pileCarreau = new VBox();
@@ -36,7 +41,7 @@ public class VueTableau {
 	
 	GridPane  basTableauJeu = new GridPane ();
 		
-	ArrayList<VBox> listColl = new ArrayList<VBox>();
+	List<VBox> listColl = new ArrayList<VBox>();
 		VBox colonne1 = new VBox();
 		VBox colonne2 = new VBox();
 		VBox colonne3 = new VBox();
@@ -47,42 +52,76 @@ public class VueTableau {
 
 	//---------------------------------------CONSTRUCTEUR-----------------------------------------------------------------------
 	
-	public VueTableau(ArrayList<Carte> paquet) {
-		carteDepart = paquet;
+	public VueTableau(List<Carte> paquet, ControllerTableau controllerTableau) {
+		this.carteDepart = paquet;
+		this.controller = controllerTableau;
 		afficherTableau();
-	};
+	}
+
 	//---------------------------------------AUTRES METHODES-----------------------------------------------------------------------
 	public void afficherTableau() {
-		
-		cartesCache.getChildren().add(creerImageView(creerImage("verso.jpg")));
-		carteDevoile.getChildren().add(creerImageView(creerImage("pioche.png")));
+
+		cartesCachePioche.getChildren().add(Utility.creerImageView(Utility.creerImage("verso.jpg")));
+		cartesCachePioche.setStyle("-fx-background-color : CRIMSON; ");
+		carteDevoilePioche.getChildren().add(Utility.creerImageView(Utility.creerImage("pioche.png")));
+		carteDevoilePioche.setStyle("-fx-background-color : DARKMAGENTA;");
+		carteDevoilePioche.setPrefWidth(400);
+		carteDevoilePioche.setPrefHeight(400);
 			
-		pileCoeur.getChildren().add(creerImageView(creerImage("pileCoeur.png")));
-		pilePique.getChildren().add(creerImageView(creerImage("pilePique.png")));
-		pileCarreau.getChildren().add(creerImageView(creerImage("pileCarreau.png")));
-		pileTrefle.getChildren().add(creerImageView(creerImage("pileTrefle.png")));
-			
+		pileCoeur.getChildren().add(Utility.creerImageView(Utility.creerImage("pileCoeur.png")));
+		pileCoeur.setId("pileCoeur");
+		pileCoeur.setStyle("-fx-background-color : red; ");
+
+		pilePique.getChildren().add(Utility.creerImageView(Utility.creerImage("pilePique.png")));
+		pilePique.setId("pilePique");
+		pilePique.setStyle("-fx-background-color : black; ");
+
+		pileCarreau.getChildren().add(Utility.creerImageView(Utility.creerImage("pileCarreau.png")));
+		pileCarreau.setId("pileCarreau");
+		pileCarreau.setStyle("-fx-background-color : orange; ");
+
+		pileTrefle.getChildren().add(Utility.creerImageView(Utility.creerImage("pileTrefle.png")));
+		pileTrefle.setId("pileTrefle");
+		pileTrefle.setStyle("-fx-background-color : grey; ");
+
+		carteDevoilePioche.setId("pioche");
+
 		listColl.add(colonne1);
+		colonne1.setId("colonne1");
+		//colonne1.getStyleClass().add("colonne");
+
 		listColl.add(colonne2);
+		colonne2.setId("colonne2");
+
 		listColl.add(colonne3);
+		colonne3.setId("colonne3");
+
 		listColl.add(colonne4);
+		colonne4.setId("colonne4");
+
 		listColl.add(colonne5);
+		colonne5.setId("colonne5");
+
 		listColl.add(colonne6);
+		colonne6.setId("colonne6");
+
 		listColl.add(colonne7);
+		colonne7.setId("colonne7");
+
 		
-		pioche.getChildren().addAll(cartesCache,carteDevoile);
+		pioche.getChildren().addAll(cartesCachePioche,carteDevoilePioche);
 		pioche.setPadding(new Insets(0, 10, 0, 10));
 		pileFondation.getChildren().addAll(pileCoeur,pilePique,pileCarreau,pileTrefle );
 		
 		System.out.println("VueTableau / taille du jeu avant de distribuer les carte : "+ carteDepart.size());
 		/**
 		 * Distribution des cartes sur le plateau de jeu : carteSurTableau venant du paquet de carte : carteDepart
-		 * et suppréssion des cartes distribué de carteDepart
+		 * et suppréssion des cartes distribué de carteDepart. carteDepart devient donc par la suite la pioche
 		 */
 			for(int i=0;i<7;i++) {
 				for(int j=0;j< i+1;j++) {
 //					ListCarte.get(i).add(carteDepart.getLast());
-						listColl.get(i).getChildren().add(creerImageViewCarteVerso(carteDepart.getLast()));
+						listColl.get(i).getChildren().add(Utility.creerImageViewCarteVerso(carteDepart.getLast()));
 //						System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! colonne " +i+" listColl " + listColl.get(i));
 						carteSurTableau.add(carteDepart.getLast());				
 						carteDepart.remove(carteDepart.getLast());
@@ -93,16 +132,18 @@ public class VueTableau {
 	/*
 	* TODO afficher la dernière carte et appliquer le drag sur les cartes versos n'est appelé qu'une fois, il faut rappeler le bloc à chaque fois qu'une carte est dévoilé
 	* */
-		afficherDerniereCarteColonne();
 
-		for(int i=0;i<listColl.size();i++) {
+
+		/*for(int i=0;i<listColl.size();i++) {
             ImageView iv = (ImageView) listColl.get(i).getChildren().getLast();
 			Carte c = (Carte) iv.getUserData();
 			//System.out.println("****************************** iv.getUserData() = " + iv.getUserData());
            if (c.getImageCarteAafficher() == ImageCarte.RECTO) {
                 eventDrag(iv);
-            }
-        }
+            } --> maintenant dans la méthode afficherDerniereCarteColonneEtDragable()
+        }*/
+		afficherDerniereCarteColonneEtDragable();
+		afficherNouvelleCartePioche();
 
 		eventDrop(colonne1);
 		eventDrop(colonne2);
@@ -111,6 +152,11 @@ public class VueTableau {
 		eventDrop(colonne5);
 		eventDrop(colonne6);
 		eventDrop(colonne7);
+		eventDrop(pileCarreau);
+		eventDrop(pileCoeur);
+		eventDrop(pileTrefle);
+		eventDrop(pilePique);
+
 
 		//carteDepart.subList(0, cpt).clear();
 		System.out.println("VueTableau / carte restant dans carteDépart : "+ carteDepart.size() +" carteSurTableau : "+carteSurTableau.size()+"    carte de départ : "+ carteDepart.toString());
@@ -159,76 +205,66 @@ public class VueTableau {
 		Main.setMainScene(scene);
 	}
 
-	
-	public void afficherNouvelleCartePioche(Carte carte) {
-		String imgCarte;
-		imgCarte = carte.getImg_carte();
-		
-		try {
-			
-			Image img = new Image(getClass().getResource('"' + imgCarte +'"' ).toExternalForm());
-			ImageView iv = new ImageView(img);
-			carteDevoile.getChildren().clear();
-			carteDevoile.getChildren().add(iv);
-					
-		}catch(Exception e) {
-			System.out.println("VueTableau : Erreur lors du chargement de l'image de la carte devoille de la pioche " +e);
-		}
-	}
 
-	public Image creerImage(String cheminImg) {
-		try {
-			Image imgCarte = new Image(getClass().getResource("/images/"+cheminImg).toExternalForm());
-			//ImageView imgViewCarte = new ImageView(imgCarte);
-			//imgCarte.setFitHeight(244);
-			//imgViewCarte.setFitWidth(170);
-			//imgViewCarte.setUserData(cheminImg.getClass());
+	public void afficherNouvelleCartePioche() {
+		cartesCachePioche.setOnMouseClicked(new EventHandler <MouseEvent>(){
+			public void handle(MouseEvent event) {
+				System.out.println("cpt pioche : " + cptPioche);
+				if(cptPioche != -1){
+					carteDepart.get(cptPioche).setImageCarteAafficher(ImageCarte.VERSO);
+				}
+				cptPioche++;
+				//System.out.println("Début de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
+				ImageView imageViewCarteDePioche = (ImageView) carteDevoilePioche.getChildren().getFirst();
 
-			return imgCarte;
-		}catch(Exception e) {System.out.println("VueTableau: fonction afficherImg(string)"+ e);
-			return null;
-		}
-	}
-	public ImageView creerImageView(Image Img) {
-		try {
-		//Image imgCarte = new Image(getClass().getResource("/images/"+cheminImg).toExternalForm());
-		ImageView imgViewCarte = new ImageView(Img);
-		imgViewCarte.setFitHeight(244);
-		imgViewCarte.setFitWidth(170);
-		//imgViewCarte.setUserData(cheminImg.getClass());
+				if(carteDepart.size()==cptPioche){
 
-		return imgViewCarte;
-		}catch(Exception e) {System.out.println("VueTableau: fonction afficherImg(string)"+ e);
-		return null;
-		}		
-	}
+					imageViewCarteDePioche.setImage(Utility.creerImage("piocheRetour.png"));
+					cptPioche =-1;
 
-	public ImageView creerImageViewCarteVerso(Carte carte) {
-		try {
-			Image imgCarte = new Image(getClass().getResource("/images/"+carte.getImg_carte_verso()).toExternalForm());
-			ImageView imgViewCarte = new ImageView(imgCarte);
-			imgViewCarte.setFitHeight(244);
-			imgViewCarte.setFitWidth(170);
-			imgViewCarte.setUserData(carte);
-			//System.out.println("creerImageViewCarteVerso | imgViewCarte.setUserData(carte) = " + imgViewCarte.getUserData());
-			return imgViewCarte;
-			}catch(Exception e) {System.out.println("VueTableau: creerImageViewCarteVerso | fonction afficherImg(carte)"+ e);
-			return null;
+				}else {
+					imageViewCarteDePioche.setImage(Utility.creerImage(carteDepart.get(cptPioche).getImg_carte()));
+					if(cptPioche != -1){
+
+						carteDepart.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
+						imageViewCarteDePioche.setUserData(carteDepart.get(cptPioche));
+						eventDrag(imageViewCarteDePioche);
+					}
+					//System.out.println("Fin de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
+				}
+
 			}
+		});
 	}
 
 	/**
 	 * méthode permettant de remplacer l'image de la derniere carte de chaque pile pour la remplacer par la carte coté recto
+
+	 for(int i=0;i<listColl.size();i++) {
+	 ImageView iv = (ImageView) listColl.get(i).getChildren().getLast();
+	 Carte c = (Carte) iv.getUserData();
+	 //System.out.println("****************************** iv.getUserData() = " + iv.getUserData());
+	 if (c.getImageCarteAafficher() == ImageCarte.RECTO) {
+	 eventDrag(iv);
+	 }
+	 }
 	 */
-	public void afficherDerniereCarteColonne() {
+	public void afficherDerniereCarteColonneEtDragable() {
 		for(int i=0;i<listColl.size();i++) {
 
 			Carte derniereCarte = (Carte) listColl.get(i).getChildren().getLast().getUserData();
-			ImageView ivDerniereCarte = (ImageView) listColl.get(i).getChildren().getLast();
-			ivDerniereCarte.setImage(creerImage(derniereCarte.getImg_carte()));
+			listColl.get(i).getChildren().remove((ImageView) listColl.get(i).getChildren().getLast());
 			derniereCarte.setImageCarteAafficher(ImageCarte.RECTO);
-			System.out.println("derniere carte = " + derniereCarte + " pour  i = " + i + "Image à afficher : " + derniereCarte.getImageCarteAafficher());
 
+			ImageView ivDerniereCarte = Utility.creerImageView(Utility.creerImage(derniereCarte.getImg_carte()));
+			ivDerniereCarte.setUserData(derniereCarte);
+			ivDerniereCarte.setId("ImageView de " + derniereCarte.toString());
+			listColl.get(i).getChildren().add(ivDerniereCarte);
+			if (derniereCarte.getImageCarteAafficher() == ImageCarte.RECTO) {
+				eventDrag(ivDerniereCarte);
+			}
+			//ivDerniereCarte.setImage(creerImage(derniereCarte.getImg_carte()));
+			//System.out.println("derniere carte = " + derniereCarte + " pour  i = " + i + "Image à afficher : " + derniereCarte.getImageCarteAafficher());
 		}	
 	}
 	/**
@@ -240,7 +276,7 @@ public class VueTableau {
 			public void handle(MouseEvent event)
 			{
 				noeud.setMouseTransparent(true);
-				System.out.println("Event on Source: mouse pressed");
+				//System.out.println("Event on Source: mouse pressed");
 				event.setDragDetect(true);
 			}
 		});
@@ -249,14 +285,14 @@ public class VueTableau {
 			public void handle(MouseEvent event)
 			{
 				noeud.setMouseTransparent(false);
-				System.out.println("Event on Source: mouse released");
+				//System.out.println("Event on Source: mouse released");
 			}
 		});
 
 		noeud.setOnMouseDragged(new EventHandler <MouseEvent>() {
 			public void handle(MouseEvent event)
 			{
-				System.out.println("Event on Source: mouse dragged");
+				//System.out.println("Event on Source: mouse dragged");
 				event.setDragDetect(false);
 			}
 		});
@@ -265,7 +301,7 @@ public class VueTableau {
 			public void handle(MouseEvent event)
 			{
 				noeud.startFullDrag();
-				System.out.println("Event on Source: drag detected");
+				//System.out.println("Event on Source: drag detected");
 			}
 		});
 
@@ -278,30 +314,45 @@ public class VueTableau {
 		noeud.setOnMouseDragEntered(new EventHandler <MouseDragEvent>() {
 			public void handle(MouseDragEvent event)
 			{
-				System.out.println("Event on Target: mouse dragged");
+				//System.out.println("Event on Target: mouse dragged");
 			}
 		});
 
 		noeud.setOnMouseDragOver(new EventHandler <MouseDragEvent>() {
 			public void handle(MouseDragEvent event)
 			{
-				System.out.println("Event on Target: mouse drag over");
+				//System.out.println("Event on Target: mouse drag over");
 			}
 		});
 
 		noeud.setOnMouseDragReleased(new EventHandler <MouseDragEvent>() {
 			public void handle(MouseDragEvent event)
 			{
-				System.out.println("Event on Target: mouse drag released");
+				//System.out.println("Event on Target: mouse drag released");
 				/*Appelle au controlleur pour savoir quoi faire lors du relachement de la souris */
-				new ControllerTableau();
+				EventType<MouseDragEvent> eventType = event.getEventType();
+				ImageView ivSource = (ImageView) event.getGestureSource();
+				VBox vBoxSource = (VBox) ivSource.getParent();
+				Carte carteSource = (Carte) ivSource.getUserData();
+				System.out.println("source.getUserData() : " + ivSource.getUserData().toString());
+				System.out.println("event.getGestureSource() : " + (event.getGestureSource()));
+				System.out.println("event.getGestureSource().getParents() : " + (((ImageView) event.getGestureSource()).getParent()));
+				VBox vBoxTarget = noeud;
+				Carte carteTarget = (Carte)vBoxTarget.getChildren().getLast().getUserData();;
+				System.out.println("target = " + vBoxTarget.toString() +" carte target : "+ carteTarget);
+
+				controller.carteEstDeposable(carteSource,ivSource,vBoxSource,carteTarget,vBoxTarget,cptPioche,carteDepart,carteSurTableau);
+
+
+
+
 			}
 		});
 
 		noeud.setOnMouseDragExited(new EventHandler <MouseDragEvent>() {
 			public void handle(MouseDragEvent event)
 			{
-				System.out.println("Event on Target: mouse drag exited");
+				//System.out.println("Event on Target: mouse drag exited");
 			}
 		});
 

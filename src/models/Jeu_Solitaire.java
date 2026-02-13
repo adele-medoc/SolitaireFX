@@ -2,15 +2,16 @@ package models;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Jeu_Solitaire {
-	ArrayList<Carte> paquet= new ArrayList<Carte>();
+	List<Carte> paquet= new ArrayList<Carte>();
 	
 	public Jeu_Solitaire() {
 	
 	}
 	
-	public ArrayList<Carte> creerPaquet() {
+	public List<Carte> creerPaquet() {
 		
 		for(int i=1;i<53;i++) {
 			int valeurCarte;
@@ -49,11 +50,11 @@ public class Jeu_Solitaire {
 		
 		return paquet ;
 	}
-	public ArrayList<Carte> getPaquet() {
+	public List<Carte> getPaquet() {
 		return paquet;
 	}
 
-	public void setPaquet(ArrayList<Carte> paquet) {
+	public void setPaquet(List<Carte> paquet) {
 		this.paquet = paquet;
 	}
 

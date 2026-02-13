@@ -65,7 +65,7 @@ public class Carte {
 				return false;
 			}
 		}
-		public String estRougeOuNoir(String couleur_carte) {
+		public String estRougeOuNoir() {
 			if ((couleur_carte == "coeur" ) || (couleur_carte == "carreau" )) {
 				return "rouge" ;
 			}else{return "noir";}
@@ -73,7 +73,7 @@ public class Carte {
 	// -----toString()-----
 		@Override
 		public String toString() {
-		return valeur_carte + " de " + couleur_carte;
+		return valeur_carte + " de " + couleur_carte + ", la face de la carte à afficher est " + imageCarteAafficher;
 	}
 
 
