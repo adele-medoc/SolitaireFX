@@ -4,6 +4,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import models.Carte;
 import models.ImageCarte;
+import utilitaire.Utility;
 
 import java.util.List;
 
@@ -42,37 +43,6 @@ public class ControllerTableau {
         *  est-ce qu'il ne faut pas enlement et plutôt faire le contrôle de l'ima afficher par carte.getImg_carte()*/
         if(couleurSource.equals("coeur")&&target.getId().equals("pileCoeur")){
             carteDeposablePileFondation(source,target,carteSource,carteTarget,compteurPioche,ivSource,cartesPioche);
-            /*if(source.getId().equals("pioche")){
-                if(target.getChildren().size() ==1 && valSource==1){
-                    target.getChildren().removeFirst();
-                    target.getChildren().add(ivSource);
-                    compteurPioche--;
-                    cartesPioche.get(compteurPioche).setImageCarteAafficher(ImageCarte.RECTO);
-                    ImageView nouvelleImgPioche = creerImageView(creerImage(cartesPioche.get(compteurPioche).getImg_carte()));
-                    nouvelleImgPioche.setUserData(cartesPioche.get(compteurPioche));
-                    System.out.println("nouvelleImgPioche.getUserData "+nouvelleImgPioche.getUserData());
-                    source.getChildren().add(nouvelleImgPioche);
-
-                } else if (carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1) {
-                    source.getChildren().remove(ivSource);
-                    target.getChildren().add(ivSource);
-                }
-
-            }else{
-                if(target.getChildren().size() ==1 && valSource==1){
-                    target.getChildren().removeFirst();
-                    source.getChildren().remove(ivSource);
-                    target.getChildren().add(ivSource);
-                    //System.out.println("Controleur tableau imageview de la carte source " + ivSource.getUserData());
-                }
-
-                if(carteTarget.getValeur_carte() == carteSource.getValeur_carte()+1){
-                    source.getChildren().remove(ivSource);
-                    target.getChildren().add(ivSource);
-                }
-            }
-
-             // if(){} si la carte source = à target+1 on peut ajouter la carte*/
         }
         if(couleurSource.equals("pique")&&target.getId().equals("pilePique")){
             carteDeposablePileFondation(source,target,carteSource,carteTarget,compteurPioche,ivSource,cartesPioche);
@@ -95,57 +65,65 @@ public class ControllerTableau {
 
     public void carteDeposablePileFondation(VBox source, VBox target, Carte carteSource, Carte carteTarget, int compteurPioche, ImageView ivSource, List<Carte>cartesPioche){
         int valSource = carteSource.getValeur_carte();
-        String couleurSource = carteSource.getCouleur_carte();
+
         //SI LA CARTE PROVIENT DE LA PIOCHE
         if(source.getId().equals("pioche")){
-            System.out.println("********VUE TABLEAU avant if cpt pioche : " + compteurPioche + " Taille de la pioche : "+cartesPioche.size());
-                    if(target.getChildren().size() ==1 && valSource==1){
-                        target.getChildren().removeFirst();
-                        target.getChildren().add(ivSource);
-                        cartesPioche.remove(carteSource);
-                        compteurPioche--;
-                        cartesPioche.get(compteurPioche).setImageCarteAafficher(ImageCarte.RECTO);
-                        ImageView nouvelleImgPioche = creerImageView(creerImage(cartesPioche.get(compteurPioche).getImg_carte()));
-                        nouvelleImgPioche.setUserData(cartesPioche.get(compteurPioche));
-                        System.out.println("nouvelleImgPioche.getUserData "+nouvelleImgPioche.getUserData());
-                        source.getChildren().add(nouvelleImgPioche);
-                        System.out.println("********CONTROLLER TABLEAU fin if | cpt pioche : " + compteurPioche + " Taille de la pioche : "+cartesPioche.size());
+            System.out.println("----CONTROLLER TABLEAU avant if cpt pioche : " + compteurPioche + " Taille de la pioche : "+cartesPioche.size());
+            if((target.getChildren().size() ==1 && valSource==1)) {
 
-                    } else if (carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1) {
-                        source.getChildren().remove(ivSource);
-                        target.getChildren().add(ivSource);
-                        compteurPioche--;
-                        cartesPioche.get(compteurPioche).setImageCarteAafficher(ImageCarte.RECTO);
-                        ImageView nouvelleImgPioche = creerImageView(creerImage(cartesPioche.get(compteurPioche).getImg_carte()));
-                        nouvelleImgPioche.setUserData(cartesPioche.get(compteurPioche));
-                        cartesPioche.remove(carteSource);
-                        System.out.println("nouvelleImgPioche.getUserData "+nouvelleImgPioche.getUserData());
-                        source.getChildren().add(nouvelleImgPioche);
-                        System.out.println("********CONTROLLER TABLEAU fin if | cpt pioche : " + compteurPioche + " Taille de la pioche : "+cartesPioche.size());
-                        System.out.println("nouvelleImgPioche.getUserData "+nouvelleImgPioche.getUserData());
-                        /*
-                        source.getChildren().remove(ivSource);
-                        target.getChildren().add(ivSource);
-                        cartesPioche.remove(carteSource);
-                        compteurPioche--;
-                        cartesPioche.get(compteurPioche).setImageCarteAafficher(ImageCarte.RECTO);
-                        ImageView nouvelleImgPioche = creerImageView(creerImage(cartesPioche.get(compteurPioche).getImg_carte()));
-                        nouvelleImgPioche.setUserData(cartesPioche.get(compteurPioche));
-                        source.getChildren().add(nouvelleImgPioche);
-                    */
+                target.getChildren().removeFirst();
+                target.getChildren().add(ivSource);
+                cartesPioche.remove(carteSource);
 
-                    }
+                if (compteurPioche == 0) {
+                    ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
+                    source.getChildren().add(nouvelleImgPioche);
+                } else {
+                    compteurPioche--;
+                    cartesPioche.get(compteurPioche).setImageCarteAafficher(ImageCarte.RECTO);
+                    ImageView nouvelleImgPioche = creerImageView(creerImage(cartesPioche.get(compteurPioche).getImg_carte()));
+                    nouvelleImgPioche.setUserData(cartesPioche.get(compteurPioche));
+                    System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
+                    source.getChildren().add(nouvelleImgPioche);
+                    System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + compteurPioche + " Taille de la pioche : " + cartesPioche.size());
+
+                }
+            } else if ((carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1)) {
+                target.getChildren().removeFirst();
+                target.getChildren().add(ivSource);
+                cartesPioche.remove(carteSource);
+
+                if (compteurPioche == 0) {
+                    ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
+                    source.getChildren().add(nouvelleImgPioche);
+                } else {
+                    compteurPioche--;
+                    cartesPioche.get(compteurPioche).setImageCarteAafficher(ImageCarte.RECTO);
+                    ImageView nouvelleImgPioche = creerImageView(creerImage(cartesPioche.get(compteurPioche).getImg_carte()));
+                    nouvelleImgPioche.setUserData(cartesPioche.get(compteurPioche));
+                    System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
+                    source.getChildren().add(nouvelleImgPioche);
+                    System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + compteurPioche + " Taille de la pioche : " + cartesPioche.size());
+
+                }
+            }else {
+                System.out.println("impossible de placer la carte "+carteSource+" sur la pile fondation");
+            }
 
             //SI LA CARTE PROVIENT DU PLATEAU
         }else{
+
             if(target.getChildren().size() ==1 && valSource==1){
                 target.getChildren().removeFirst();
                 source.getChildren().remove(ivSource);
                 target.getChildren().add(ivSource);
-                        //System.out.println("Controleur tableau imageview de la carte source " + ivSource.getUserData());
+
             } else if (carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1) {
+                target.getChildren().removeFirst();
                 source.getChildren().remove(ivSource);
                 target.getChildren().add(ivSource);
+            }else {
+                System.out.println("impossible de placer la carte "+carteSource+" sur la pile fondation");
             }
         }
     }

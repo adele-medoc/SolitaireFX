@@ -73,6 +73,7 @@ public class Carte {
 	// -----toString()-----
 		@Override
 		public String toString() {
-		return valeur_carte + " de " + couleur_carte + ", la face de la carte à afficher est " + imageCarteAafficher;
+		return valeur_carte + " de " + couleur_carte;
+				//+ ", la face de la carte à afficher est " + imageCarteAafficher;
 	}
 }

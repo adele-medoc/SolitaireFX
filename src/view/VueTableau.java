@@ -5,6 +5,7 @@ import java.util.List;
 
 import application.Main;
 import controller.ControllerTableau;
+import controller.DragDropHandler;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Insets;
@@ -22,7 +23,7 @@ import utilitaire.Utility;
 public class VueTableau {
 	//-----------------------------------------ATTRIBUTS---------------------------------------------------------------------
 	ControllerTableau controller;
-	//ArrayList<Carte> carteDepart;
+	DragDropHandler controllerEvent;
 	List<Carte> carteDepart = new ArrayList<Carte>();
 	List<Carte> carteSurTableau = new ArrayList<Carte>();
 	BorderPane root = new BorderPane();
@@ -209,7 +210,10 @@ public class VueTableau {
 	public void afficherNouvelleCartePioche() {
 		cartesCachePioche.setOnMouseClicked(new EventHandler <MouseEvent>(){
 			public void handle(MouseEvent event) {
-				System.out.println("VUE TABLEAU début méthode | cpt pioche : " + cptPioche + " Taille de la pioche : "+carteDepart.size());
+				System.out.println("VUE | cptPioche : " + cptPioche + " Taille pioche : "+carteDepart.size());
+				if(carteDepart.size()==cptPioche){
+					cptPioche--;
+				}
 				if(cptPioche != -1){
 					carteDepart.get(cptPioche).setImageCarteAafficher(ImageCarte.VERSO);
 				}
@@ -230,7 +234,7 @@ public class VueTableau {
 						imageViewCarteDePioche.setUserData(carteDepart.get(cptPioche));
 						eventDrag(imageViewCarteDePioche);
 					}
-					System.out.println("Fin de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
+					//System.out.println("Fin de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
 				}
 
 			}
@@ -335,18 +339,16 @@ public class VueTableau {
 				ImageView ivSource = (ImageView) event.getGestureSource();
 				VBox vBoxSource = (VBox) ivSource.getParent();
 				Carte carteSource = (Carte) ivSource.getUserData();
+				VBox vBoxTarget = noeud;
+				Carte carteTarget = (Carte)vBoxTarget.getChildren().getLast().getUserData();;
+				System.out.println("**************************** Mouvement Drag'n'Drop avant envoie au controlleur *************************************");
 				System.out.println("source.getUserData() : " + ivSource.getUserData().toString());
 				System.out.println("event.getGestureSource() : " + (event.getGestureSource()));
 				System.out.println("event.getGestureSource().getParents() : " + (((ImageView) event.getGestureSource()).getParent()));
-				VBox vBoxTarget = noeud;
-				Carte carteTarget = (Carte)vBoxTarget.getChildren().getLast().getUserData();;
 				System.out.println("target = " + vBoxTarget.toString() +" carte target : "+ carteTarget);
+				System.out.println("*********************************************************************************************************************");
 
 				controller.carteEstDeposable(carteSource,ivSource,vBoxSource,carteTarget,vBoxTarget,cptPioche,carteDepart,carteSurTableau);
-
-
-
-
 			}
 		});
 

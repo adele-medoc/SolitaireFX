@@ -11,6 +11,7 @@ public class ControllerAccueil {
 	ControllerTableau controllerTableau;
 
 	public ControllerAccueil(ControllerTableau c) {
+
 		this.controllerTableau = c;
 	}
 
