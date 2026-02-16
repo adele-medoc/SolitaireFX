@@ -75,6 +75,4 @@ public class Carte {
 		public String toString() {
 		return valeur_carte + " de " + couleur_carte + ", la face de la carte à afficher est " + imageCarteAafficher;
 	}
-
-
 }

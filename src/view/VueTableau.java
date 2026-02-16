@@ -209,7 +209,7 @@ public class VueTableau {
 	public void afficherNouvelleCartePioche() {
 		cartesCachePioche.setOnMouseClicked(new EventHandler <MouseEvent>(){
 			public void handle(MouseEvent event) {
-				System.out.println("cpt pioche : " + cptPioche);
+				System.out.println("VUE TABLEAU début méthode | cpt pioche : " + cptPioche + " Taille de la pioche : "+carteDepart.size());
 				if(cptPioche != -1){
 					carteDepart.get(cptPioche).setImageCarteAafficher(ImageCarte.VERSO);
 				}
@@ -230,11 +230,12 @@ public class VueTableau {
 						imageViewCarteDePioche.setUserData(carteDepart.get(cptPioche));
 						eventDrag(imageViewCarteDePioche);
 					}
-					//System.out.println("Fin de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
+					System.out.println("Fin de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
 				}
 
 			}
 		});
+
 	}
 
 	/**
