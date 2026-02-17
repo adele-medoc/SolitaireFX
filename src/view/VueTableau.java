@@ -22,17 +22,19 @@ import utilitaire.Utility;
 
 public class VueTableau {
 	//-----------------------------------------ATTRIBUTS---------------------------------------------------------------------
-	ControllerTableau controller;
+	ControllerTableau controllerTableau;
 	DragDropHandler controllerEvent;
-	List<Carte> carteDepart = new ArrayList<Carte>();
-	List<Carte> carteSurTableau = new ArrayList<Carte>();
+	//List<Carte> carteDepart = new ArrayList<Carte>();
+	List<Carte> cartePioche;
+	List<Carte> carteSurTableau;
+
 	BorderPane root = new BorderPane();
-	
 	GridPane  hautTableauJeu = new GridPane ();
 		HBox pioche = new HBox();
 		VBox carteDevoilePioche= new VBox();
 		VBox cartesCachePioche= new VBox();
-		int cptPioche = -1;
+		//int cptPioche;
+		int index;
 
 	HBox pileFondation = new HBox();
 		VBox pileCoeur = new VBox();
@@ -52,10 +54,13 @@ public class VueTableau {
 		VBox colonne7 = new VBox();
 
 	//---------------------------------------CONSTRUCTEUR-----------------------------------------------------------------------
-	
-	public VueTableau(List<Carte> paquet, ControllerTableau controllerTableau) {
-		this.carteDepart = paquet;
-		this.controller = controllerTableau;
+
+	public VueTableau(ControllerTableau controllerTableau, DragDropHandler controllerDragDrop) {
+		this.controllerTableau = controllerTableau;
+		this.controllerEvent = controllerDragDrop;
+		this.cartePioche = controllerTableau.getPioche();
+		this.carteSurTableau = controllerTableau.getCarteSurTableau();
+		//this.cptPioche = controllerTableau.getCptPioche();
 		afficherTableau();
 	}
 
@@ -114,18 +119,19 @@ public class VueTableau {
 		pioche.setPadding(new Insets(0, 10, 0, 10));
 		pileFondation.getChildren().addAll(pileCoeur,pilePique,pileCarreau,pileTrefle );
 		
-		System.out.println("VueTableau / taille du jeu avant de distribuer les carte : "+ carteDepart.size());
+		//System.out.println("VueTableau / taille du jeu avant de distribuer les carte : "+ carteDepart.size());
 		/**
-		 * Distribution des cartes sur le plateau de jeu : carteSurTableau venant du paquet de carte : carteDepart
-		 * et suppréssion des cartes distribué de carteDepart. carteDepart devient donc par la suite la pioche
+		 * Distribution des cartes sur le plateau de jeu
+		 * todo franchement j'ai un doute sur l'affichage des cartes
 		 */
 			for(int i=0;i<7;i++) {
 				for(int j=0;j< i+1;j++) {
 //					ListCarte.get(i).add(carteDepart.getLast());
-						listColl.get(i).getChildren().add(Utility.creerImageViewCarteVerso(carteDepart.getLast()));
+						listColl.get(i).getChildren().add(Utility.creerImageViewCarteVerso(carteSurTableau.get(index)));
+						index++;
 //						System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! colonne " +i+" listColl " + listColl.get(i));
-						carteSurTableau.add(carteDepart.getLast());				
-						carteDepart.remove(carteDepart.getLast());
+//						carteSurTableau.add(carteDepart.getLast());
+//						carteDepart.remove(carteDepart.getLast());
 //						System.out.println("\n VueTableau: i = "+i+" j =" +j + "  taille du jeu : "+ carteDepart.size()); 
 //						System.out.println("VueTableau: taille carteSurTableau : "+ carteSurTableau.size()+ "  carte ajouté : "+ carteSurTableau.toString()+"\n ");
 				}
@@ -134,35 +140,33 @@ public class VueTableau {
 	* TODO afficher la dernière carte et appliquer le drag sur les cartes versos n'est appelé qu'une fois, il faut rappeler le bloc à chaque fois qu'une carte est dévoilé
 	* */
 
-
-		/*for(int i=0;i<listColl.size();i++) {
-            ImageView iv = (ImageView) listColl.get(i).getChildren().getLast();
-			Carte c = (Carte) iv.getUserData();
-			//System.out.println("****************************** iv.getUserData() = " + iv.getUserData());
-           if (c.getImageCarteAafficher() == ImageCarte.RECTO) {
-                eventDrag(iv);
-            } --> maintenant dans la méthode afficherDerniereCarteColonneEtDragable()
-        }*/
 		afficherDerniereCarteColonneEtDragable();
 		afficherNouvelleCartePioche();
 
-		eventDrop(colonne1);
-		eventDrop(colonne2);
-		eventDrop(colonne3);
-		eventDrop(colonne4);
-		eventDrop(colonne5);
-		eventDrop(colonne6);
-		eventDrop(colonne7);
-		eventDrop(pileCarreau);
-		eventDrop(pileCoeur);
-		eventDrop(pileTrefle);
-		eventDrop(pilePique);
+		controllerEvent.eventDrop(colonne1,controllerTableau);
+		controllerEvent.eventDrop(colonne2,controllerTableau);
+		controllerEvent.eventDrop(colonne3,controllerTableau);
+		controllerEvent.eventDrop(colonne4,controllerTableau);
+		controllerEvent.eventDrop(colonne5,controllerTableau);
+		controllerEvent.eventDrop(colonne6,controllerTableau);
+		controllerEvent.eventDrop(colonne7,controllerTableau);
+		controllerEvent.eventDrop(pileCarreau,controllerTableau);
+		controllerEvent.eventDrop(pileCoeur,controllerTableau);
+		controllerEvent.eventDrop(pileTrefle,controllerTableau);
+		controllerEvent.eventDrop(pilePique,controllerTableau);
 
+//		eventDrop(colonne1);
+//		eventDrop(colonne2);
+//		eventDrop(colonne3);
+//		eventDrop(colonne4);
+//		eventDrop(colonne5);
+//		eventDrop(colonne6);
+//		eventDrop(colonne7);
+//		eventDrop(pileCarreau);
+//		eventDrop(pileCoeur);
+//		eventDrop(pileTrefle);
+//		eventDrop(pilePique);
 
-		//carteDepart.subList(0, cpt).clear();
-		System.out.println("VueTableau / carte restant dans carteDépart : "+ carteDepart.size() +" carteSurTableau : "+carteSurTableau.size()+"    carte de départ : "+ carteDepart.toString());
-			
-		
 		colonne1.setSpacing(-200);
 		colonne2.setSpacing(-200);
 		colonne3.setSpacing(-200);
@@ -210,29 +214,29 @@ public class VueTableau {
 	public void afficherNouvelleCartePioche() {
 		cartesCachePioche.setOnMouseClicked(new EventHandler <MouseEvent>(){
 			public void handle(MouseEvent event) {
-				System.out.println("VUE | cptPioche : " + cptPioche + " Taille pioche : "+carteDepart.size());
-				if(carteDepart.size()==cptPioche){
-					cptPioche--;
+				//System.out.println("VUE | cptPioche : " + cptPioche + " Taille pioche : "+cartePioche.size());
+				if(cartePioche.size()== controllerTableau.getCptPioche()){
+					controllerTableau.setCptPioche(controllerTableau.getCptPioche() - 1);
 				}
-				if(cptPioche != -1){
-					carteDepart.get(cptPioche).setImageCarteAafficher(ImageCarte.VERSO);
+				if(controllerTableau.getCptPioche() != -1){
+					cartePioche.get(controllerTableau.getCptPioche()).setImageCarteAafficher(ImageCarte.VERSO);
 				}
-				cptPioche++;
+				controllerTableau.setCptPioche(controllerTableau.getCptPioche() + 1);
 				//System.out.println("Début de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
 				ImageView imageViewCarteDePioche = (ImageView) carteDevoilePioche.getChildren().getFirst();
 
-				if(carteDepart.size()==cptPioche){
+				if(cartePioche.size()==controllerTableau.getCptPioche()){
 
 					imageViewCarteDePioche.setImage(Utility.creerImage("piocheRetour.png"));
-					cptPioche =-1;
+					controllerTableau.setCptPioche(-1);
 
 				}else {
-					imageViewCarteDePioche.setImage(Utility.creerImage(carteDepart.get(cptPioche).getImg_carte()));
-					if(cptPioche != -1){
+					imageViewCarteDePioche.setImage(Utility.creerImage(cartePioche.get(controllerTableau.getCptPioche()).getImg_carte()));
+					if(controllerTableau.getCptPioche() != -1){
 
-						carteDepart.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
-						imageViewCarteDePioche.setUserData(carteDepart.get(cptPioche));
-						eventDrag(imageViewCarteDePioche);
+						cartePioche.get(controllerTableau.getCptPioche()).setImageCarteAafficher(ImageCarte.RECTO);
+						imageViewCarteDePioche.setUserData(cartePioche.get(controllerTableau.getCptPioche()));
+						controllerEvent.eventDrag(imageViewCarteDePioche);
 					}
 					//System.out.println("Fin de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
 				}
@@ -266,7 +270,7 @@ public class VueTableau {
 			ivDerniereCarte.setId("ImageView de " + derniereCarte.toString());
 			listColl.get(i).getChildren().add(ivDerniereCarte);
 			if (derniereCarte.getImageCarteAafficher() == ImageCarte.RECTO) {
-				eventDrag(ivDerniereCarte);
+				controllerEvent.eventDrag(ivDerniereCarte);
 			}
 			//ivDerniereCarte.setImage(creerImage(derniereCarte.getImg_carte()));
 			//System.out.println("derniere carte = " + derniereCarte + " pour  i = " + i + "Image à afficher : " + derniereCarte.getImageCarteAafficher());
@@ -275,91 +279,91 @@ public class VueTableau {
 	/**
 	*	méthode pour le controle des évenemments drag, grâce à la sources qui est une imageView
 	*/
-	public void eventDrag(ImageView noeud){
-		// Add mouse event handlers for the source
-		noeud.setOnMousePressed(new EventHandler <MouseEvent>() {
-			public void handle(MouseEvent event)
-			{
-				noeud.setMouseTransparent(true);
-				//System.out.println("Event on Source: mouse pressed");
-				event.setDragDetect(true);
-			}
-		});
-
-		noeud.setOnMouseReleased(new EventHandler <MouseEvent>() {
-			public void handle(MouseEvent event)
-			{
-				noeud.setMouseTransparent(false);
-				//System.out.println("Event on Source: mouse released");
-			}
-		});
-
-		noeud.setOnMouseDragged(new EventHandler <MouseEvent>() {
-			public void handle(MouseEvent event)
-			{
-				//System.out.println("Event on Source: mouse dragged");
-				event.setDragDetect(false);
-			}
-		});
-
-		noeud.setOnDragDetected(new EventHandler <MouseEvent>() {
-			public void handle(MouseEvent event)
-			{
-				noeud.startFullDrag();
-				//System.out.println("Event on Source: drag detected");
-			}
-		});
-
-	}
-	/*   méthode pour les le controle des évenemments drop, le target est situé sur un VBox
-	 * */
-	public void eventDrop(VBox noeud){
-		//System.out.println("************** passé par eventdragndrop VBox ***************");
-
-		noeud.setOnMouseDragEntered(new EventHandler <MouseDragEvent>() {
-			public void handle(MouseDragEvent event)
-			{
-				//System.out.println("Event on Target: mouse dragged");
-			}
-		});
-
-		noeud.setOnMouseDragOver(new EventHandler <MouseDragEvent>() {
-			public void handle(MouseDragEvent event)
-			{
-				//System.out.println("Event on Target: mouse drag over");
-			}
-		});
-
-		noeud.setOnMouseDragReleased(new EventHandler <MouseDragEvent>() {
-			public void handle(MouseDragEvent event)
-			{
-				//System.out.println("Event on Target: mouse drag released");
-				/*Appelle au controlleur pour savoir quoi faire lors du relachement de la souris */
-				EventType<MouseDragEvent> eventType = event.getEventType();
-				ImageView ivSource = (ImageView) event.getGestureSource();
-				VBox vBoxSource = (VBox) ivSource.getParent();
-				Carte carteSource = (Carte) ivSource.getUserData();
-				VBox vBoxTarget = noeud;
-				Carte carteTarget = (Carte)vBoxTarget.getChildren().getLast().getUserData();;
-				System.out.println("**************************** Mouvement Drag'n'Drop avant envoie au controlleur *************************************");
-				System.out.println("source.getUserData() : " + ivSource.getUserData().toString());
-				System.out.println("event.getGestureSource() : " + (event.getGestureSource()));
-				System.out.println("event.getGestureSource().getParents() : " + (((ImageView) event.getGestureSource()).getParent()));
-				System.out.println("target = " + vBoxTarget.toString() +" carte target : "+ carteTarget);
-				System.out.println("*********************************************************************************************************************");
-
-				controller.carteEstDeposable(carteSource,ivSource,vBoxSource,carteTarget,vBoxTarget,cptPioche,carteDepart,carteSurTableau);
-			}
-		});
-
-		noeud.setOnMouseDragExited(new EventHandler <MouseDragEvent>() {
-			public void handle(MouseDragEvent event)
-			{
-				//System.out.println("Event on Target: mouse drag exited");
-			}
-		});
-
-	}
+//	public void eventDrag(ImageView noeud){
+//		// Add mouse event handlers for the source
+//		noeud.setOnMousePressed(new EventHandler <MouseEvent>() {
+//			public void handle(MouseEvent event)
+//			{
+//				noeud.setMouseTransparent(true);
+//				//System.out.println("Event on Source: mouse pressed");
+//				event.setDragDetect(true);
+//			}
+//		});
+//
+//		noeud.setOnMouseReleased(new EventHandler <MouseEvent>() {
+//			public void handle(MouseEvent event)
+//			{
+//				noeud.setMouseTransparent(false);
+//				//System.out.println("Event on Source: mouse released");
+//			}
+//		});
+//
+//		noeud.setOnMouseDragged(new EventHandler <MouseEvent>() {
+//			public void handle(MouseEvent event)
+//			{
+//				//System.out.println("Event on Source: mouse dragged");
+//				event.setDragDetect(false);
+//			}
+//		});
+//
+//		noeud.setOnDragDetected(new EventHandler <MouseEvent>() {
+//			public void handle(MouseEvent event)
+//			{
+//				noeud.startFullDrag();
+//				//System.out.println("Event on Source: drag detected");
+//			}
+//		});
+//
+//	}
+//	/*   méthode pour les le controle des évenemments drop, le target est situé sur un VBox
+//	 * */
+//	public void eventDrop(VBox noeud){
+//		//System.out.println("************** passé par eventdragndrop VBox ***************");
+//
+//		noeud.setOnMouseDragEntered(new EventHandler <MouseDragEvent>() {
+//			public void handle(MouseDragEvent event)
+//			{
+//				//System.out.println("Event on Target: mouse dragged");
+//			}
+//		});
+//
+//		noeud.setOnMouseDragOver(new EventHandler <MouseDragEvent>() {
+//			public void handle(MouseDragEvent event)
+//			{
+//				//System.out.println("Event on Target: mouse drag over");
+//			}
+//		});
+//
+//		noeud.setOnMouseDragReleased(new EventHandler <MouseDragEvent>() {
+//			public void handle(MouseDragEvent event)
+//			{
+//				//System.out.println("Event on Target: mouse drag released");
+//				/*Appelle au controlleur pour savoir quoi faire lors du relachement de la souris */
+//				EventType<MouseDragEvent> eventType = event.getEventType();
+//				ImageView ivSource = (ImageView) event.getGestureSource();
+//				VBox vBoxSource = (VBox) ivSource.getParent();
+//				Carte carteSource = (Carte) ivSource.getUserData();
+//				VBox vBoxTarget = noeud;
+//				Carte carteTarget = (Carte)vBoxTarget.getChildren().getLast().getUserData();;
+//				System.out.println("**************************** Mouvement Drag'n'Drop avant envoie au controlleur *************************************");
+//				System.out.println("source.getUserData() : " + ivSource.getUserData().toString());
+//				System.out.println("event.getGestureSource() : " + (event.getGestureSource()));
+//				System.out.println("event.getGestureSource().getParents() : " + (((ImageView) event.getGestureSource()).getParent()));
+//				System.out.println("target = " + vBoxTarget.toString() +" carte target : "+ carteTarget);
+//				System.out.println("*********************************************************************************************************************");
+//
+//				controller.carteEstDeposable(carteSource,ivSource,vBoxSource,carteTarget,vBoxTarget,cptPioche,carteDepart,carteSurTableau);
+//			}
+//		});
+//
+//		noeud.setOnMouseDragExited(new EventHandler <MouseDragEvent>() {
+//			public void handle(MouseDragEvent event)
+//			{
+//				//System.out.println("Event on Target: mouse drag exited");
+//			}
+//		});
+//
+//	}
 }
 
 

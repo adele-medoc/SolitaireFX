@@ -1,7 +1,9 @@
 package application;
 
+import controller.Controller;
 import controller.ControllerAccueil;
 import controller.ControllerTableau;
+import controller.DragDropHandler;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,13 +23,15 @@ public class Main extends Application {
     private static Scene mainScene;
 
 	// ----------------------- INSTANCIATION DES CONTROLLEUR DE L'APPLICATION -------------------------
-	ControllerTableau controllerTableau = new ControllerTableau();
-	ControllerAccueil controllerAccueil = new ControllerAccueil(controllerTableau);
+	//ControllerAccueil controllerAccueil = new ControllerAccueil(controllerTableau);
+	//ControllerTableau controllerTableau = new ControllerTableau(controllerDragDrop);
+	DragDropHandler controllerDragDrop = new DragDropHandler();
+	ControllerAccueil controllerAccueil = new ControllerAccueil(controllerDragDrop);
 
 	@Override
 	public void start(Stage stage) {
-		
-		
+
+
 		try {
 			primaryStage = stage;
 			primaryStage.setWidth(1920);
@@ -43,15 +47,15 @@ public class Main extends Application {
 			buttonScore.getStyleClass().add("boutonAccueil");
 
 			try {
-				
+
 					Image img = new Image(getClass().getResource("/images/fondSolitaire.png").toExternalForm());
 					ImageView iv = new ImageView(img);
 					accueil.getChildren().add(iv);
-					
+
 					Image imgTitre = new Image(getClass().getResource("/images/titre1.png").toExternalForm());
 					ImageView ivTitre = new ImageView(imgTitre);
 					buttonVb.getChildren().add(ivTitre);
-							
+
 			}catch(Exception e) {
 	            System.out.println("Main : Erreur lors du chargement du background " +e);
 	        }
@@ -65,7 +69,7 @@ public class Main extends Application {
 					controllerAccueil.choisirJeu();
 	            }
 	        });
-			
+
 			buttonScore.setOnAction(new EventHandler<ActionEvent>() {
 	            @Override
 	            public void handle(ActionEvent event) {
@@ -78,13 +82,13 @@ public class Main extends Application {
 			buttonVb.getChildren().addAll(buttonJouer,buttonScore);
 			buttonVb.setAlignment(Pos.CENTER);
 			buttonVb.setSpacing(15);
-			
-			
+
+
 			root.getChildren().add(accueil);
 			root.getChildren().add(buttonVb);
 			root.setAlignment(Pos.CENTER);
-			
-			
+
+
 			mainScene = new Scene(root);
 	        mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(mainScene);
