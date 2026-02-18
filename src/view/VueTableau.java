@@ -6,9 +6,17 @@ import java.util.List;
 import application.Main;
 import controller.ControllerTableau;
 import controller.DragDropHandler;
+import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.WritableIntegerValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -19,6 +27,9 @@ import javafx.scene.layout.VBox;
 import models.Carte;
 import models.ImageCarte;
 import utilitaire.Utility;
+
+import static utilitaire.Utility.creerImage;
+import static utilitaire.Utility.creerImageView;
 
 public class VueTableau {
 	//-----------------------------------------ATTRIBUTS---------------------------------------------------------------------
@@ -141,7 +152,10 @@ public class VueTableau {
 	* */
 
 		afficherDerniereCarteColonneEtDragable();
+
 		afficherNouvelleCartePioche();
+		miseAjourAffichageDerniereCarteColonne();
+
 
 		controllerEvent.eventDrop(colonne1,controllerTableau);
 		controllerEvent.eventDrop(colonne2,controllerTableau);
@@ -154,18 +168,6 @@ public class VueTableau {
 		controllerEvent.eventDrop(pileCoeur,controllerTableau);
 		controllerEvent.eventDrop(pileTrefle,controllerTableau);
 		controllerEvent.eventDrop(pilePique,controllerTableau);
-
-//		eventDrop(colonne1);
-//		eventDrop(colonne2);
-//		eventDrop(colonne3);
-//		eventDrop(colonne4);
-//		eventDrop(colonne5);
-//		eventDrop(colonne6);
-//		eventDrop(colonne7);
-//		eventDrop(pileCarreau);
-//		eventDrop(pileCoeur);
-//		eventDrop(pileTrefle);
-//		eventDrop(pilePique);
 
 		colonne1.setSpacing(-200);
 		colonne2.setSpacing(-200);
@@ -210,7 +212,6 @@ public class VueTableau {
 		Main.setMainScene(scene);
 	}
 
-
 	public void afficherNouvelleCartePioche() {
 		cartesCachePioche.setOnMouseClicked(new EventHandler <MouseEvent>(){
 			public void handle(MouseEvent event) {
@@ -248,122 +249,79 @@ public class VueTableau {
 
 	/**
 	 * méthode permettant de remplacer l'image de la derniere carte de chaque pile pour la remplacer par la carte coté recto
-
-	 for(int i=0;i<listColl.size();i++) {
-	 ImageView iv = (ImageView) listColl.get(i).getChildren().getLast();
-	 Carte c = (Carte) iv.getUserData();
-	 //System.out.println("****************************** iv.getUserData() = " + iv.getUserData());
-	 if (c.getImageCarteAafficher() == ImageCarte.RECTO) {
-	 eventDrag(iv);
-	 }
-	 }
 	 */
 	public void afficherDerniereCarteColonneEtDragable() {
+
 		for(int i=0;i<listColl.size();i++) {
+			VBox colonne = listColl.get(i);
+			//Si la colonne est vide on ajoute l'imageView de carte vide pour pouvoir ajouter un roi dessus
+			if(colonne.getChildren().isEmpty()){
+				System.out.println("--------------------------Colonne vide " + colonne.getId());
+				ImageView imageViewPile = creerImageView(creerImage("pioche.png"));
 
-			Carte derniereCarte = (Carte) listColl.get(i).getChildren().getLast().getUserData();
-			listColl.get(i).getChildren().remove((ImageView) listColl.get(i).getChildren().getLast());
-			derniereCarte.setImageCarteAafficher(ImageCarte.RECTO);
-
-			ImageView ivDerniereCarte = Utility.creerImageView(Utility.creerImage(derniereCarte.getImg_carte()));
-			ivDerniereCarte.setUserData(derniereCarte);
-			ivDerniereCarte.setId("ImageView de " + derniereCarte.toString());
-			listColl.get(i).getChildren().add(ivDerniereCarte);
-			if (derniereCarte.getImageCarteAafficher() == ImageCarte.RECTO) {
-				controllerEvent.eventDrag(ivDerniereCarte);
+				imageViewPile.setId("carteVide_"+colonne.getId());
+				System.out.println(imageViewPile.getId());
+				colonne.getChildren().add(imageViewPile);
+				continue;
 			}
-			//ivDerniereCarte.setImage(creerImage(derniereCarte.getImg_carte()));
-			//System.out.println("derniere carte = " + derniereCarte + " pour  i = " + i + "Image à afficher : " + derniereCarte.getImageCarteAafficher());
-		}	
+			// vérification de l'imageView
+			// (si c'est la carte vide, sans ça, ça renvoie une NullPointerException à derniereCarte.getImageCarteAafficher())
+			Node dernierNoeud = colonne.getChildren().getLast();
+			//Si le dernier noeud n'est pas une imageview on reboucle
+			if (!(dernierNoeud instanceof ImageView iv)) continue;
+			//si la dernière imageview n'est pas une carte on reboucle
+			if(!(iv.getUserData() instanceof Carte))continue;
+
+			Carte derniereCarte = (Carte) dernierNoeud.getUserData();
+
+			if( !(derniereCarte.getImageCarteAafficher()==null)){
+				if(derniereCarte.getImageCarteAafficher() == ImageCarte.VERSO){
+					listColl.get(i).getChildren().remove((ImageView) listColl.get(i).getChildren().getLast());
+					derniereCarte.setImageCarteAafficher(ImageCarte.RECTO);
+
+					ImageView ivDerniereCarte = Utility.creerImageView(Utility.creerImage(derniereCarte.getImg_carte()));
+					ivDerniereCarte.setUserData(derniereCarte);
+					ivDerniereCarte.setId("ImageView de " + derniereCarte.toString());
+					listColl.get(i).getChildren().add(ivDerniereCarte);
+					if (derniereCarte.getImageCarteAafficher() == ImageCarte.RECTO) {
+					controllerEvent.eventDrag(ivDerniereCarte);
+					}
+				}
+
+			}
+
+		}
 	}
+	public void miseAjourAffichageDerniereCarteColonne(){
+
+    	for (VBox colonne : listColl) {
+
+        	colonne.getChildren().addListener((ListChangeListener<Node>) change -> {
+			System.out.println("*********************************Listener actif sur " + colonne.getId());
+            while (change.next()) {
+				System.out.println("changement détecté dans la colonne "+ colonne.getId());
+                if (change.wasRemoved()) {
+					System.out.println("Suppression détectée dans " + colonne.getId());
+					Platform.runLater(this::afficherDerniereCarteColonneEtDragable);
+//					if(colonne.getChildren().isEmpty()){
+//						System.out.println("--------------------------Colonne vide " + colonne.getId());
+//						ImageView imageViewPile = creerImageView(creerImage("pioche.png"));
+//						imageViewPile.setId("carteVide_"+colonne.getId());
+//						System.out.println(imageViewPile.getId());
+//						colonne.getChildren().add(imageViewPile);
+//
+//					}
+                }
+            }
+        });
+    	}
+	}
+
+
+
 	/**
 	*	méthode pour le controle des évenemments drag, grâce à la sources qui est une imageView
 	*/
-//	public void eventDrag(ImageView noeud){
-//		// Add mouse event handlers for the source
-//		noeud.setOnMousePressed(new EventHandler <MouseEvent>() {
-//			public void handle(MouseEvent event)
-//			{
-//				noeud.setMouseTransparent(true);
-//				//System.out.println("Event on Source: mouse pressed");
-//				event.setDragDetect(true);
-//			}
-//		});
-//
-//		noeud.setOnMouseReleased(new EventHandler <MouseEvent>() {
-//			public void handle(MouseEvent event)
-//			{
-//				noeud.setMouseTransparent(false);
-//				//System.out.println("Event on Source: mouse released");
-//			}
-//		});
-//
-//		noeud.setOnMouseDragged(new EventHandler <MouseEvent>() {
-//			public void handle(MouseEvent event)
-//			{
-//				//System.out.println("Event on Source: mouse dragged");
-//				event.setDragDetect(false);
-//			}
-//		});
-//
-//		noeud.setOnDragDetected(new EventHandler <MouseEvent>() {
-//			public void handle(MouseEvent event)
-//			{
-//				noeud.startFullDrag();
-//				//System.out.println("Event on Source: drag detected");
-//			}
-//		});
-//
-//	}
-//	/*   méthode pour les le controle des évenemments drop, le target est situé sur un VBox
-//	 * */
-//	public void eventDrop(VBox noeud){
-//		//System.out.println("************** passé par eventdragndrop VBox ***************");
-//
-//		noeud.setOnMouseDragEntered(new EventHandler <MouseDragEvent>() {
-//			public void handle(MouseDragEvent event)
-//			{
-//				//System.out.println("Event on Target: mouse dragged");
-//			}
-//		});
-//
-//		noeud.setOnMouseDragOver(new EventHandler <MouseDragEvent>() {
-//			public void handle(MouseDragEvent event)
-//			{
-//				//System.out.println("Event on Target: mouse drag over");
-//			}
-//		});
-//
-//		noeud.setOnMouseDragReleased(new EventHandler <MouseDragEvent>() {
-//			public void handle(MouseDragEvent event)
-//			{
-//				//System.out.println("Event on Target: mouse drag released");
-//				/*Appelle au controlleur pour savoir quoi faire lors du relachement de la souris */
-//				EventType<MouseDragEvent> eventType = event.getEventType();
-//				ImageView ivSource = (ImageView) event.getGestureSource();
-//				VBox vBoxSource = (VBox) ivSource.getParent();
-//				Carte carteSource = (Carte) ivSource.getUserData();
-//				VBox vBoxTarget = noeud;
-//				Carte carteTarget = (Carte)vBoxTarget.getChildren().getLast().getUserData();;
-//				System.out.println("**************************** Mouvement Drag'n'Drop avant envoie au controlleur *************************************");
-//				System.out.println("source.getUserData() : " + ivSource.getUserData().toString());
-//				System.out.println("event.getGestureSource() : " + (event.getGestureSource()));
-//				System.out.println("event.getGestureSource().getParents() : " + (((ImageView) event.getGestureSource()).getParent()));
-//				System.out.println("target = " + vBoxTarget.toString() +" carte target : "+ carteTarget);
-//				System.out.println("*********************************************************************************************************************");
-//
-//				controller.carteEstDeposable(carteSource,ivSource,vBoxSource,carteTarget,vBoxTarget,cptPioche,carteDepart,carteSurTableau);
-//			}
-//		});
-//
-//		noeud.setOnMouseDragExited(new EventHandler <MouseDragEvent>() {
-//			public void handle(MouseDragEvent event)
-//			{
-//				//System.out.println("Event on Target: mouse drag exited");
-//			}
-//		});
-//
-//	}
 }
 
 

@@ -6,7 +6,7 @@ import models.Carte;
 import models.Jeu_Solitaire;
 import view.VueTableau;
 
-public class ControllerAccueil {
+public class ControllerAccueil extends Controller {
 	int choix;
 	//ControllerTableau controllerTableau;
 	DragDropHandler controllerDragDrop;

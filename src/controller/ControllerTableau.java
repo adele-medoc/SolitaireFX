@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import models.Carte;
@@ -19,8 +20,10 @@ public class ControllerTableau extends Controller{
     Carte carteSource;
     ImageView ivSource;
     VBox source;
+
     Carte carteTarget;
     VBox target;
+
     Jeu_Solitaire jeu;
     List<Carte> paquet = new ArrayList<Carte>();
     List<Carte> pioche = new ArrayList<Carte>();
@@ -122,12 +125,10 @@ public class ControllerTableau extends Controller{
     private void initialiserPartie() {
         paquet = jeu.creerPaquet();
         System.out.println("**** taille du jeu avant de distribuer les carte : "+ paquet.size());
-        System.out.println("Carte plateau");
         for(int i =0;i<28;i++){
             carteSurTableau.add(paquet.get(i));
 
         }
-        System.out.println("Carte pioche");
         for(int i =28; i< paquet.size();i++){
             pioche.add(paquet.get(i));
         }
@@ -138,7 +139,7 @@ public class ControllerTableau extends Controller{
      *
      */
     public void carteEstDeposable(){
-        int valSource = carteSource.getValeur_carte();
+        //int valSource = carteSource.getValeur_carte();
         String couleurSource = carteSource.getCouleur_carte();
         try{
             System.out.println("carteTarget.getValeur_carte() " + carteTarget.getValeur_carte());
@@ -149,6 +150,26 @@ public class ControllerTableau extends Controller{
         if(target.getId().equals("colonne1")||target.getId().equals("colonne2")||target.getId().equals("colonne3")||
                 target.getId().equals("colonne4")||target.getId().equals("colonne5")||target.getId().equals("colonne6")||target.getId().equals("colonne7")){
         }
+        Node dernierNoeud = target.getChildren().getLast();
+        if ((dernierNoeud instanceof ImageView)){
+
+            if(!(dernierNoeud.getId()==null)){
+
+                if("carteVide_colonne1".equals(dernierNoeud.getId())|| "carteVide_colonne2".equals(dernierNoeud.getId())|| "carteVide_colonne3".equals(dernierNoeud.getId())||
+                        "carteVide_colonne4".equals(dernierNoeud.getId())|| "carteVide_colonne5".equals(dernierNoeud.getId())||
+                        "carteVide_colonne6".equals(dernierNoeud.getId())|| dernierNoeud.getId().equals("carteVide_colonne7")){
+                    if(carteSource.getValeur_carte()==13){
+                        if(source.getId().equals("pioche")){
+                            transfertCartePioche();
+                        }else {
+                            transfertCartePlateau();
+                        }
+
+                    }
+                }
+            }
+        }
+
 
         if(couleurSource.equals("coeur")&&target.getId().equals("pileCoeur")){
             carteDeposablePileFondation();
@@ -179,44 +200,45 @@ public class ControllerTableau extends Controller{
         if(source.getId().equals("pioche")){
             System.out.println("----CONTROLLER TABLEAU avant if cpt pioche : " + cptPioche + " Taille de la pioche : "+pioche.size());
             if((target.getChildren().size() ==1 && valSource==1)) {
-
-                target.getChildren().removeFirst();
-                target.getChildren().add(ivSource);
-                pioche.remove(carteSource);
-
-                if (cptPioche == 0) {
-                    ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
-                    source.getChildren().add(nouvelleImgPioche);
-                } else {
-                    cptPioche--;
-                    pioche.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
-                    ImageView nouvelleImgPioche = creerImageView(creerImage(pioche.get(cptPioche).getImg_carte()));
-                    nouvelleImgPioche.setUserData(pioche.get(cptPioche));
-                    controllerDragDrop.eventDrag(nouvelleImgPioche);
-                    System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
-                    source.getChildren().add(nouvelleImgPioche);
-                    System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + cptPioche + " Taille de la pioche : " +pioche.size());
-
-                }
+                transfertCartePioche();
+//                target.getChildren().removeFirst();
+//                target.getChildren().add(ivSource);
+//                pioche.remove(carteSource);
+//
+//                if (cptPioche == 0) {
+//                    ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
+//                    source.getChildren().add(nouvelleImgPioche);
+//                } else {
+//                    cptPioche--;
+//                    pioche.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
+//                    ImageView nouvelleImgPioche = creerImageView(creerImage(pioche.get(cptPioche).getImg_carte()));
+//                    nouvelleImgPioche.setUserData(pioche.get(cptPioche));
+//                    controllerDragDrop.eventDrag(nouvelleImgPioche);
+//                    System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
+//                    source.getChildren().add(nouvelleImgPioche);
+//                    System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + cptPioche + " Taille de la pioche : " +pioche.size());
+//
+//                }
             } else if ((carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1)) {
-                target.getChildren().removeFirst();
-                target.getChildren().add(ivSource);
-                pioche.remove(carteSource);
-
-                if (cptPioche == 0) {
-                    ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
-                    source.getChildren().add(nouvelleImgPioche);
-                } else {
-                    cptPioche--;
-                    pioche.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
-                    ImageView nouvelleImgPioche = creerImageView(creerImage(pioche.get(cptPioche).getImg_carte()));
-                    nouvelleImgPioche.setUserData(pioche.get(cptPioche));
-                    controllerDragDrop.eventDrag(nouvelleImgPioche);
-                    System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
-                    source.getChildren().add(nouvelleImgPioche);
-                    System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + cptPioche + " Taille de la pioche : " + pioche.size());
-
-                }
+                transfertCartePioche();
+//                target.getChildren().removeFirst();
+//                target.getChildren().add(ivSource);
+//                pioche.remove(carteSource);
+//
+//                if (cptPioche == 0) {
+//                    ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
+//                    source.getChildren().add(nouvelleImgPioche);
+//                } else {
+//                    cptPioche--;
+//                    pioche.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
+//                    ImageView nouvelleImgPioche = creerImageView(creerImage(pioche.get(cptPioche).getImg_carte()));
+//                    nouvelleImgPioche.setUserData(pioche.get(cptPioche));
+//                    controllerDragDrop.eventDrag(nouvelleImgPioche);
+//                    System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
+//                    source.getChildren().add(nouvelleImgPioche);
+//                    System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + cptPioche + " Taille de la pioche : " + pioche.size());
+//
+//                }
             }else {
                 System.out.println("impossible de placer la carte "+carteSource+" sur la pile fondation");
             }
@@ -225,20 +247,48 @@ public class ControllerTableau extends Controller{
         }else{
 
             if(target.getChildren().size() ==1 && valSource==1){
-                target.getChildren().removeFirst();
-                source.getChildren().remove(ivSource);
-                target.getChildren().add(ivSource);
+                transfertCartePlateau();
+//                target.getChildren().removeFirst();
+//                source.getChildren().remove(ivSource);
+//                target.getChildren().add(ivSource);
+
 
             } else if (carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1) {
-                target.getChildren().removeFirst();
-                source.getChildren().remove(ivSource);
-                target.getChildren().add(ivSource);
+                transfertCartePlateau();
+//                target.getChildren().removeFirst();
+//                source.getChildren().remove(ivSource);
+//                target.getChildren().add(ivSource);
             }else {
                 System.out.println("impossible de placer la carte "+carteSource+" sur la pile fondation");
             }
         }
     }
 
+    public void transfertCartePioche(){
+        target.getChildren().removeFirst();
+        target.getChildren().add(ivSource);
+        pioche.remove(carteSource);
+        if (cptPioche == 0) {
+            ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
+            source.getChildren().add(nouvelleImgPioche);
+        } else {
+            cptPioche--;
+            pioche.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
+            ImageView nouvelleImgPioche = creerImageView(creerImage(pioche.get(cptPioche).getImg_carte()));
+            nouvelleImgPioche.setUserData(pioche.get(cptPioche));
+            controllerDragDrop.eventDrag(nouvelleImgPioche);
+            System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
+            source.getChildren().add(nouvelleImgPioche);
+            System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + cptPioche + " Taille de la pioche : " +pioche.size());
+
+        }
+    }
+
+    public void transfertCartePlateau(){
+        target.getChildren().removeFirst();
+        source.getChildren().remove(ivSource);
+        target.getChildren().add(ivSource);
+    }
 
 }
 
