@@ -144,24 +144,42 @@ public class ControllerTableau extends Controller{
         try{
             System.out.println("carteTarget.getValeur_carte() " + carteTarget.getValeur_carte());
             System.out.println("carteSource.getValeur_carte() " + carteSource.getValeur_carte());
+//            System.out.println("carteTarget.estRougeOuNoir().equals(carteSource.estRougeOuNoir()) = "+carteTarget.estRougeOuNoir().equals(carteSource.estRougeOuNoir()));
+//            System.out.println("carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1 = " +(carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1));
 
-        }catch (Exception e){e.getMessage();}
 
-        if(target.getId().equals("colonne1")||target.getId().equals("colonne2")||target.getId().equals("colonne3")||
-                target.getId().equals("colonne4")||target.getId().equals("colonne5")||target.getId().equals("colonne6")||target.getId().equals("colonne7")){
+        }catch (Exception e){
+            System.out.println("recherche var au début de carte déposable : "+e.getMessage());
         }
+        if (target.getChildren().getLast() instanceof ImageView iv){
+            if (iv.getUserData() instanceof Carte){
+                if(target.getId().equals("colonne1")||target.getId().equals("colonne2")||target.getId().equals("colonne3")||
+                        target.getId().equals("colonne4")||target.getId().equals("colonne5")||target.getId().equals("colonne6")||target.getId().equals("colonne7")){
+                    if(!(carteTarget.estRougeOuNoir().equals(carteSource.estRougeOuNoir())) && carteSource.getValeur_carte()+1 == carteTarget.getValeur_carte()){
+                        System.out.println("!!!!!!!!!!!!!carte sur carte passé par la ");
+                        if(source.getId().equals("pioche")){
+                            transfertCartePioche();
+                        }else {
+                            transfertCartePlateau();
+                        }
+                    }
+                }
+            }
+        }
+
+        // Ajout du roi sur une pile vide
         Node dernierNoeud = target.getChildren().getLast();
         if ((dernierNoeud instanceof ImageView)){
-
             if(!(dernierNoeud.getId()==null)){
-
                 if("carteVide_colonne1".equals(dernierNoeud.getId())|| "carteVide_colonne2".equals(dernierNoeud.getId())|| "carteVide_colonne3".equals(dernierNoeud.getId())||
                         "carteVide_colonne4".equals(dernierNoeud.getId())|| "carteVide_colonne5".equals(dernierNoeud.getId())||
                         "carteVide_colonne6".equals(dernierNoeud.getId())|| dernierNoeud.getId().equals("carteVide_colonne7")){
                     if(carteSource.getValeur_carte()==13){
                         if(source.getId().equals("pioche")){
+                            target.getChildren().removeFirst();
                             transfertCartePioche();
                         }else {
+                            target.getChildren().removeFirst();
                             transfertCartePlateau();
                         }
 
@@ -200,45 +218,11 @@ public class ControllerTableau extends Controller{
         if(source.getId().equals("pioche")){
             System.out.println("----CONTROLLER TABLEAU avant if cpt pioche : " + cptPioche + " Taille de la pioche : "+pioche.size());
             if((target.getChildren().size() ==1 && valSource==1)) {
+                target.getChildren().removeFirst();
                 transfertCartePioche();
-//                target.getChildren().removeFirst();
-//                target.getChildren().add(ivSource);
-//                pioche.remove(carteSource);
-//
-//                if (cptPioche == 0) {
-//                    ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
-//                    source.getChildren().add(nouvelleImgPioche);
-//                } else {
-//                    cptPioche--;
-//                    pioche.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
-//                    ImageView nouvelleImgPioche = creerImageView(creerImage(pioche.get(cptPioche).getImg_carte()));
-//                    nouvelleImgPioche.setUserData(pioche.get(cptPioche));
-//                    controllerDragDrop.eventDrag(nouvelleImgPioche);
-//                    System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
-//                    source.getChildren().add(nouvelleImgPioche);
-//                    System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + cptPioche + " Taille de la pioche : " +pioche.size());
-//
-//                }
             } else if ((carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1)) {
+                target.getChildren().removeFirst();
                 transfertCartePioche();
-//                target.getChildren().removeFirst();
-//                target.getChildren().add(ivSource);
-//                pioche.remove(carteSource);
-//
-//                if (cptPioche == 0) {
-//                    ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
-//                    source.getChildren().add(nouvelleImgPioche);
-//                } else {
-//                    cptPioche--;
-//                    pioche.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
-//                    ImageView nouvelleImgPioche = creerImageView(creerImage(pioche.get(cptPioche).getImg_carte()));
-//                    nouvelleImgPioche.setUserData(pioche.get(cptPioche));
-//                    controllerDragDrop.eventDrag(nouvelleImgPioche);
-//                    System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
-//                    source.getChildren().add(nouvelleImgPioche);
-//                    System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + cptPioche + " Taille de la pioche : " + pioche.size());
-//
-//                }
             }else {
                 System.out.println("impossible de placer la carte "+carteSource+" sur la pile fondation");
             }
@@ -247,17 +231,12 @@ public class ControllerTableau extends Controller{
         }else{
 
             if(target.getChildren().size() ==1 && valSource==1){
+                target.getChildren().removeFirst();
                 transfertCartePlateau();
-//                target.getChildren().removeFirst();
-//                source.getChildren().remove(ivSource);
-//                target.getChildren().add(ivSource);
-
 
             } else if (carteSource.getValeur_carte() == carteTarget.getValeur_carte()+1) {
+                target.getChildren().removeFirst();
                 transfertCartePlateau();
-//                target.getChildren().removeFirst();
-//                source.getChildren().remove(ivSource);
-//                target.getChildren().add(ivSource);
             }else {
                 System.out.println("impossible de placer la carte "+carteSource+" sur la pile fondation");
             }
@@ -265,7 +244,7 @@ public class ControllerTableau extends Controller{
     }
 
     public void transfertCartePioche(){
-        target.getChildren().removeFirst();
+        //target.getChildren().removeFirst();
         target.getChildren().add(ivSource);
         pioche.remove(carteSource);
         if (cptPioche == 0) {
@@ -285,7 +264,7 @@ public class ControllerTableau extends Controller{
     }
 
     public void transfertCartePlateau(){
-        target.getChildren().removeFirst();
+        //target.getChildren().removeFirst();
         source.getChildren().remove(ivSource);
         target.getChildren().add(ivSource);
     }

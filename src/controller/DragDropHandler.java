@@ -2,6 +2,7 @@ package controller;
 
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
@@ -81,13 +82,15 @@ public class DragDropHandler extends Controller {
                 ImageView ivSource = (ImageView) event.getGestureSource();
                 VBox vBoxSource = (VBox) ivSource.getParent();
                 Carte carteSource = (Carte) ivSource.getUserData();
+                //Node i = event.getPickResult().getIntersectedNode();
                 VBox vBoxTarget = noeud;
                 Carte carteTarget = (Carte)vBoxTarget.getChildren().getLast().getUserData();;
                 System.out.println("**************************** Mouvement Drag'n'Drop avant envoie au controlleur *************************************");
-                System.out.println("source.getUserData() : " + ivSource.getUserData().toString());
+                System.out.println("source.getUserData() : " + carteSource.toString());
                 System.out.println("event.getGestureSource() : " + (event.getGestureSource()));
                 System.out.println("event.getGestureSource().getParents() : " + (((ImageView) event.getGestureSource()).getParent()));
                 System.out.println("target = " + vBoxTarget.toString() +" carte target : "+ carteTarget);
+                System.out.println("event.getPickResult().getIntersectedNode() = " + event.getPickResult().getIntersectedNode());
                 System.out.println("*********************************************************************************************************************");
                 controller.setCarteSource(carteSource);
                 controller.setSource(vBoxSource);

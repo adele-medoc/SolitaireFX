@@ -79,27 +79,27 @@ public class VueTableau {
 	public void afficherTableau() {
 
 		cartesCachePioche.getChildren().add(Utility.creerImageView(Utility.creerImage("verso.jpg")));
-		cartesCachePioche.setStyle("-fx-background-color : CRIMSON; ");
+		//cartesCachePioche.setStyle("-fx-background-color : CRIMSON; ");
 		carteDevoilePioche.getChildren().add(Utility.creerImageView(Utility.creerImage("pioche.png")));
-		carteDevoilePioche.setStyle("-fx-background-color : DARKMAGENTA;");
-		carteDevoilePioche.setPrefWidth(400);
-		carteDevoilePioche.setPrefHeight(400);
+		//carteDevoilePioche.setStyle("-fx-background-color : DARKMAGENTA;");
+		//carteDevoilePioche.setPrefWidth(400);
+		carteDevoilePioche.setPrefHeight(300);
 			
 		pileCoeur.getChildren().add(Utility.creerImageView(Utility.creerImage("pileCoeur.png")));
 		pileCoeur.setId("pileCoeur");
-		pileCoeur.setStyle("-fx-background-color : red; ");
+		//pileCoeur.setStyle("-fx-background-color : red; ");
 
 		pilePique.getChildren().add(Utility.creerImageView(Utility.creerImage("pilePique.png")));
 		pilePique.setId("pilePique");
-		pilePique.setStyle("-fx-background-color : black; ");
+		//pilePique.setStyle("-fx-background-color : black; ");
 
 		pileCarreau.getChildren().add(Utility.creerImageView(Utility.creerImage("pileCarreau.png")));
 		pileCarreau.setId("pileCarreau");
-		pileCarreau.setStyle("-fx-background-color : orange; ");
+		//pileCarreau.setStyle("-fx-background-color : orange; ");
 
 		pileTrefle.getChildren().add(Utility.creerImageView(Utility.creerImage("pileTrefle.png")));
 		pileTrefle.setId("pileTrefle");
-		pileTrefle.setStyle("-fx-background-color : grey; ");
+		//pileTrefle.setStyle("-fx-background-color : grey; ");
 
 		carteDevoilePioche.setId("pioche");
 
@@ -176,6 +176,7 @@ public class VueTableau {
 		colonne5.setSpacing(-200);
 		colonne6.setSpacing(-200);
 		colonne7.setSpacing(-200);
+
 		//hautTableauJeu.getChildren().addAll(pioche,pileFondation);
 		hautTableauJeu.setPadding(new Insets(20));
 		hautTableauJeu.setHgap(50); // espace horizontal entre les éléments
