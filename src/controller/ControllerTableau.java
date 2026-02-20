@@ -255,7 +255,7 @@ public class ControllerTableau extends Controller{
             pioche.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
             ImageView nouvelleImgPioche = creerImageView(creerImage(pioche.get(cptPioche).getImg_carte()));
             nouvelleImgPioche.setUserData(pioche.get(cptPioche));
-            controllerDragDrop.eventDrag(nouvelleImgPioche);
+            controllerDragDrop.eventDrag(nouvelleImgPioche,this);
             System.out.println("carte provient pioche --------nouvelleImgPioche.getUserData " + nouvelleImgPioche.getUserData());
             source.getChildren().add(nouvelleImgPioche);
             System.out.println("carte provient pioche --------------CONTROLLER TABLEAU fin if | cpt pioche : " + cptPioche + " Taille de la pioche : " +pioche.size());

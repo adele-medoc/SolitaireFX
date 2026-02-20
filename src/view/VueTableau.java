@@ -137,14 +137,10 @@ public class VueTableau {
 		 */
 			for(int i=0;i<7;i++) {
 				for(int j=0;j< i+1;j++) {
-//					ListCarte.get(i).add(carteDepart.getLast());
-						listColl.get(i).getChildren().add(Utility.creerImageViewCarteVerso(carteSurTableau.get(index)));
+					ImageView iv = Utility.creerImageViewCarteVerso(carteSurTableau.get(index));
+//					iv.setTranslateY(j*5);
+						listColl.get(i).getChildren().add(iv);
 						index++;
-//						System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!! colonne " +i+" listColl " + listColl.get(i));
-//						carteSurTableau.add(carteDepart.getLast());
-//						carteDepart.remove(carteDepart.getLast());
-//						System.out.println("\n VueTableau: i = "+i+" j =" +j + "  taille du jeu : "+ carteDepart.size()); 
-//						System.out.println("VueTableau: taille carteSurTableau : "+ carteSurTableau.size()+ "  carte ajouté : "+ carteSurTableau.toString()+"\n ");
 				}
 			}
 	/*
@@ -238,7 +234,7 @@ public class VueTableau {
 
 						cartePioche.get(controllerTableau.getCptPioche()).setImageCarteAafficher(ImageCarte.RECTO);
 						imageViewCarteDePioche.setUserData(cartePioche.get(controllerTableau.getCptPioche()));
-						controllerEvent.eventDrag(imageViewCarteDePioche);
+						controllerEvent.eventDrag(imageViewCarteDePioche,controllerTableau);
 					}
 					//System.out.println("Fin de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
 				}
@@ -285,7 +281,7 @@ public class VueTableau {
 					ivDerniereCarte.setId("ImageView de " + derniereCarte.toString());
 					listColl.get(i).getChildren().add(ivDerniereCarte);
 					if (derniereCarte.getImageCarteAafficher() == ImageCarte.RECTO) {
-					controllerEvent.eventDrag(ivDerniereCarte);
+					controllerEvent.eventDrag(ivDerniereCarte,controllerTableau);
 					}
 				}
 
