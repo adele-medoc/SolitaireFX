@@ -143,14 +143,12 @@ public class VueTableau {
 						index++;
 				}
 			}
-	/*
-	* TODO afficher la dernière carte et appliquer le drag sur les cartes versos n'est appelé qu'une fois, il faut rappeler le bloc à chaque fois qu'une carte est dévoilé
-	* */
 
 		afficherDerniereCarteColonneEtDragable();
 
 		afficherNouvelleCartePioche();
 		miseAjourAffichageDerniereCarteColonne();
+
 
 
 		controllerEvent.eventDrop(colonne1,controllerTableau);
@@ -164,6 +162,9 @@ public class VueTableau {
 		controllerEvent.eventDrop(pileCoeur,controllerTableau);
 		controllerEvent.eventDrop(pileTrefle,controllerTableau);
 		controllerEvent.eventDrop(pilePique,controllerTableau);
+
+		//todo je ne sais pas trop ou et quand l'appeler
+		controllerTableau.finDePartie();
 
 		colonne1.setSpacing(-200);
 		colonne2.setSpacing(-200);
@@ -253,11 +254,11 @@ public class VueTableau {
 			VBox colonne = listColl.get(i);
 			//Si la colonne est vide on ajoute l'imageView de carte vide pour pouvoir ajouter un roi dessus
 			if(colonne.getChildren().isEmpty()){
-				System.out.println("--------------------------Colonne vide " + colonne.getId());
+//				System.out.println("--------------------------Colonne vide " + colonne.getId());
 				ImageView imageViewPile = creerImageView(creerImage("pioche.png"));
 
 				imageViewPile.setId("carteVide_"+colonne.getId());
-				System.out.println(imageViewPile.getId());
+//				System.out.println(imageViewPile.getId());
 				colonne.getChildren().add(imageViewPile);
 				continue;
 			}
@@ -294,11 +295,11 @@ public class VueTableau {
     	for (VBox colonne : listColl) {
 
         	colonne.getChildren().addListener((ListChangeListener<Node>) change -> {
-			System.out.println("*********************************Listener actif sur " + colonne.getId());
+//			System.out.println("*********************************Listener actif sur " + colonne.getId());
             while (change.next()) {
-				System.out.println("changement détecté dans la colonne "+ colonne.getId());
+//				System.out.println("changement détecté dans la colonne "+ colonne.getId());
                 if (change.wasRemoved()) {
-					System.out.println("Suppression détectée dans " + colonne.getId());
+//					System.out.println("Suppression détectée dans " + colonne.getId());
 					Platform.runLater(this::afficherDerniereCarteColonneEtDragable);
 //					if(colonne.getChildren().isEmpty()){
 //						System.out.println("--------------------------Colonne vide " + colonne.getId());

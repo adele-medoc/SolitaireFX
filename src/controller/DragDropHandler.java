@@ -27,10 +27,16 @@ public class DragDropHandler extends Controller {
                 ClipboardContent content = new ClipboardContent();
                 content.putString(noeud.getUserData().toString());
                 content.putImage(noeud.getImage());
-                System.out.println("ClipboardContent = "+content);
+//                System.out.println("ClipboardContent = "+content);
                 db.setContent(content);
+                VBox vbSource = (VBox) noeud.getParent();
+
+                controller.setSource(vbSource);
+                controller.setIvSource(noeud);
                 controller.setCarteSource((Carte) noeud.getUserData());
-                System.out.println("carte source : "+noeud.getUserData().toString());
+                controller.setIndexCarteColonne(vbSource.getChildren().indexOf(noeud));
+//                System.out.println("carte source : "+noeud.getUserData().toString());
+//                System.out.println("vbSource.getChildren().indexOf(noeud) -> index de la carte dans la colonne "+ vbSource.getChildren().indexOf(noeud) + " sur " + vbSource.getChildren().indexOf(vbSource.getChildren().getLast()));
                 event.consume();
             }
         });
@@ -133,15 +139,15 @@ public class DragDropHandler extends Controller {
                 if (db.hasString()) {
                     VBox vBoxTarget = noeud;
                 Carte carteTarget = (Carte)vBoxTarget.getChildren().getLast().getUserData();;
-                System.out.println("**************************** Mouvement Drag'n'Drop avant envoie au controlleur *************************************");
-                //System.out.println("source.getUserData() : " + carteSource.toString());
-                System.out.println("event.getGestureSource() : " + (event.getGestureSource()));
-                System.out.println("event.getGestureSource().getParents() : " + (((ImageView) event.getGestureSource()).getParent()));
-                System.out.println("target = " + vBoxTarget.toString() +" carte target : "+ carteTarget);
-                System.out.println("*********************************************************************************************************************");
+//                System.out.println("**************************** Mouvement Drag'n'Drop avant envoie au controlleur *************************************");
+//                //System.out.println("source.getUserData() : " + carteSource.toString());
+//                System.out.println("event.getGestureSource() : " + (event.getGestureSource()));
+//                System.out.println("event.getGestureSource().getParents() : " + (((ImageView) event.getGestureSource()).getParent()));
+//                System.out.println("target = " + vBoxTarget.toString() +" carte target : "+ carteTarget);
+//                System.out.println("*********************************************************************************************************************");
                 //controller.setCarteSource(((Carte) event.getGestureSource()).getUserData());
-                controller.setSource((VBox) ((ImageView) event.getGestureSource()).getParent());
-                controller.setIvSource((ImageView) event.getGestureSource());
+                //controller.setSource((VBox) ((ImageView) event.getGestureSource()).getParent());
+                //controller.setIvSource((ImageView) event.getGestureSource());
                 controller.setTarget(vBoxTarget);
                 controller.setCarteTarget(carteTarget);
                 controller.carteEstDeposable();
