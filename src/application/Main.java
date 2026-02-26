@@ -8,7 +8,9 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import view.VueAccueil;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -25,84 +27,37 @@ public class Main extends Application {
 	// ----------------------- INSTANCIATION DES CONTROLLEUR DE L'APPLICATION -------------------------
 	//ControllerAccueil controllerAccueil = new ControllerAccueil(controllerTableau);
 	//ControllerTableau controllerTableau = new ControllerTableau(controllerDragDrop);
-	DragDropHandler controllerDragDrop = new DragDropHandler();
-	ControllerAccueil controllerAccueil = new ControllerAccueil(controllerDragDrop);
-
+	private DragDropHandler controllerDragDrop = new DragDropHandler();
+	private ControllerAccueil controllerAccueil = new ControllerAccueil(controllerDragDrop);
 	@Override
 	public void start(Stage stage) {
-
+		
 
 		try {
 			primaryStage = stage;
-			primaryStage.setWidth(1920);
-	        primaryStage.setHeight(1080);
+			double largeur = Screen.getPrimary().getBounds().getWidth();
+	        double hauteur = Screen.getPrimary().getBounds().getHeight();
+			primaryStage.setWidth(largeur);
+	        primaryStage.setHeight(hauteur);
 	        primaryStage.setTitle("Solitaire");
-			// ----------------------- ATTRIBUTS DE LA VUE -------------------------
-			StackPane root = new StackPane();
-			VBox accueil = new VBox();
-			VBox buttonVb = new VBox();
-			Button buttonJouer = new Button("Jouer");
-			Button buttonScore = new Button("Meilleur Score");
-			buttonJouer.getStyleClass().add("boutonAccueil");
-			buttonScore.getStyleClass().add("boutonAccueil");
-
-			try {
-
-					Image img = new Image(getClass().getResource("/images/fondSolitaire.png").toExternalForm());
-					ImageView iv = new ImageView(img);
-					accueil.getChildren().add(iv);
-
-					Image imgTitre = new Image(getClass().getResource("/images/titre1.png").toExternalForm());
-					ImageView ivTitre = new ImageView(imgTitre);
-					buttonVb.getChildren().add(ivTitre);
-
-			}catch(Exception e) {
-	            System.out.println("Main : Erreur lors du chargement du background " +e);
-	        }
-
-
-			// ----------------------- BOUTTON QUI APPELLE LE CONSTRUCTEUR POUR DIRIGER VERS LA BONNE VUE -------------------------
-			buttonJouer.setOnAction(new EventHandler<ActionEvent>() {
-	            @Override
-	            public void handle(ActionEvent event) {
-					controllerAccueil.setChoix(1);
-					controllerAccueil.choisirJeu();
-	            }
-	        });
-
-			buttonScore.setOnAction(new EventHandler<ActionEvent>() {
-	            @Override
-	            public void handle(ActionEvent event) {
-					controllerAccueil.setChoix(2);
-					controllerAccueil.choisirJeu();
-	            }
-	        });
-
-			// ----------------------- STYLE DE LA VUE -------------------------
-			buttonVb.getChildren().addAll(buttonJouer,buttonScore);
-			buttonVb.setAlignment(Pos.CENTER);
-			buttonVb.setSpacing(15);
-
-
-			root.getChildren().add(accueil);
-			root.getChildren().add(buttonVb);
-			root.setAlignment(Pos.CENTER);
-
-
-			mainScene = new Scene(root);
-	        mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(mainScene);
+	        
+//			mainScene = new Scene(root);
+//	        mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+////			primaryStage.setScene(mainScene);
 			primaryStage.show();
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+		
+		new VueAccueil(controllerAccueil);
 	}
 
-	// ----------------------- GETTER / SETTER -------------------
 	public static void main(String[] args) {
 		launch(args);
 	}
 	
+	// ----------------------- GETTER / SETTER -------------------
 	public static Stage getPrimaryStage() {
 		return primaryStage;
 	}
@@ -119,4 +74,5 @@ public class Main extends Application {
 		Main.mainScene = scene;
 		primaryStage.setScene(mainScene);
 	}
+	
 }

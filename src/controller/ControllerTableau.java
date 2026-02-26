@@ -1,20 +1,31 @@
 package controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import models.Carte;
 import models.ImageCarte;
 import models.Jeu_Solitaire;
+import view.VueAccueil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import application.Main;
 
 import static utilitaire.Utility.creerImage;
 import static utilitaire.Utility.creerImageView;
 
 public class ControllerTableau extends Controller {
     DragDropHandler controllerDragDrop;
+    ControllerAccueil controllerAccueil;
+    
     int cptPioche = -1;
     int indexCarteColonne;
 
@@ -40,9 +51,10 @@ public class ControllerTableau extends Controller {
     boolean pileFondatriceCompleteTrefle = false;
     boolean victoire = false;
     // ----------------------- CONSTRUCTEUR ----------------------
-    public ControllerTableau(Jeu_Solitaire jeu, DragDropHandler controllerDragDrop) {
+    public ControllerTableau(Jeu_Solitaire jeu, DragDropHandler controllerDragDrop, ControllerAccueil controllerAccueil) {
         this.jeu = jeu;
         this.controllerDragDrop = controllerDragDrop;
+        this.controllerAccueil = controllerAccueil;
         initialiserPartie();
     }
     // ----------------------- GETTER/SETTER ----------------------
@@ -227,7 +239,7 @@ public class ControllerTableau extends Controller {
         if(source.getId().equals("pileCarreau")){
             retirerCartePileFondation(pileFondatriceCarreau);
         }
-
+        //finDePartie();
         System.out.println("******** taille carteSurTableau = "+ carteSurTableau.size());
         System.out.println("******** taille pioche = "+ pioche.size());
         System.out.println("******** taille pile fondation coeur = "+ pileFondatriceCoeur.size());
@@ -391,31 +403,39 @@ public class ControllerTableau extends Controller {
         target.getChildren().add(ivSource);
 
         pileFondatrice.remove(carteSource);
-        //carteSurTableau.add(carteSource);
 
     }
 
-    public void finDePartie(){
-
+    public boolean finDePartie(){
+    	List<Boolean> l = new ArrayList<Boolean>();
 
         // partie gagné si toutes les cartes du plateau sont face RECTO
         for(Carte c : carteSurTableau){
+        	
             if(c.getImageCarteAafficher()==ImageCarte.VERSO){
-                victoire = false;
-                return;
+                l.add(false);
             }else {
-                victoire = true;
-                System.out.println("FIN DE PARTIE");
-
+            	l.add(true);
             }
+               
         }
         // partie gagné si toutes les cartes sont rangé dans les pile fondation
-        if(pileFondatriceCarreau.size()==13&& pileFondatriceCoeur.size()==13&&pileFondatriceTrefle.size()==13&&pileFondatricePique.size()==13){
+        if((pileFondatriceCarreau.size()==13&& pileFondatriceCoeur.size()==13&&pileFondatriceTrefle.size()==13&&pileFondatricePique.size()==13)||!(l.contains(false))){
             System.out.println("FIN DE PARTIE");
+            return true;
         }
-
-
-
+        
+        return false;
+    }
+    
+    public void rejouerPartie() {
+    	System.out.println("appelle à rejouerPartie");
+    	controllerAccueil.setChoix(1);
+		controllerAccueil.choisirJeu();
+    }
+    public void retourMenu() {
+    	new VueAccueil(controllerAccueil);
+    	System.out.println("appelle à retourMenu");
     }
 
 
