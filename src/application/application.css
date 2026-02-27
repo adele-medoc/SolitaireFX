@@ -71,9 +71,51 @@
 	-fx-padding : 10px;
 }
 
+.boutonTableau{
+	-fx-background-color: linear-gradient(to bottom, #FFD94A, #FFC808);
+	-fx-text-alignment: center;
+	-fx-text-fill: #FFF9EB;
+	-fx-border-radius: 8px;
+	-fx-background-radius: 8px;
+	-fx-font-size: 2em;
+	-fx-font-weight: bold;
+	-fx-cursor: hand;
+	-fx-padding: 1px 2px 1px 2px;
+	
+}
 
-#basTableauJeu{
-	-fx-alignment : top-center;
+.boutonTableau:hover {
+	-fx-background-color: linear-gradient(to bottom, #FBC02D, #F9B918);
+	-fx-text-fill: #f5f5f5;
+	-fx-background-radius: 8px;
+	-fx-border-radius: 8px;
+	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.3, 3, 3);
+    -fx-scale-x: 1.05; 
+    -fx-scale-y: 1.05;
+}
+
+.boutonTableau:pressed {
+	-fx-background-color: #F3AA27;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.6), 8, 0.3, 2, 2);
+    -fx-scale-x: 1.00;
+    -fx-scale-y: 1.00;
+}
+
+.dialogVictoire {
+    -fx-background-color: black;
+}
+
+.dialog-pane .label {
+    -fx-text-fill: white;
+}
+
+.dialogVictoire:header .header-panel {
+    -fx-background-color: black;
+}
+
+.dialog-pane:header .header-panel .label {
+    -fx-font-style: italic;
+    -fx-font-size: 2em;
 }
 
 

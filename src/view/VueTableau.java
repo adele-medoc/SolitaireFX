@@ -3,14 +3,18 @@ package view;
 import java.util.ArrayList;
 import java.util.List;
 import application.Main;
+import controller.ControllerAccueil;
 import controller.ControllerTableau;
 import controller.DragDropHandler;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -33,14 +37,15 @@ public class VueTableau {
 	//-----------------------------------------ATTRIBUTS---------------------------------------------------------------------
 	ControllerTableau controllerTableau;
 	DragDropHandler controllerEvent;
+	ControllerAccueil controllerAccueil;
 
 	List<Carte> cartePioche;
 	List<Carte> carteSurTableau;
 
 	BorderPane root = new BorderPane();
+	VBox top = new VBox();
+	HBox navBar = new HBox();
 	HBox hautTableauJeu = new HBox();
-	
-//	GridPane  hautTableauJeu = new GridPane ();
 		HBox pioche = new HBox();
 		VBox carteDevoilePioche= new VBox();
 		VBox cartesCachePioche= new VBox();
@@ -65,11 +70,12 @@ public class VueTableau {
 
 	//---------------------------------------CONSTRUCTEUR-----------------------------------------------------------------------
 
-	public VueTableau(ControllerTableau controllerTableau, DragDropHandler controllerDragDrop) {
+	public VueTableau(ControllerTableau controllerTableau, DragDropHandler controllerDragDrop,ControllerAccueil controllerAccueil) {
 		this.controllerTableau = controllerTableau;
 		this.controllerEvent = controllerDragDrop;
 		this.cartePioche = controllerTableau.getPioche();
 		this.carteSurTableau = controllerTableau.getCarteSurTableau();
+		this.controllerAccueil = controllerAccueil;
 		afficherTableau();
 	}
 
@@ -126,6 +132,15 @@ public class VueTableau {
 		listColl.add(colonne7);
 		colonne7.setId("colonne7");
 
+		Button retourMenu = new Button("Retour Menu");
+		retourMenu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	new VueAccueil(controllerAccueil);
+            }
+        });
+		retourMenu.getStyleClass().add("boutonTableau");
+		navBar.getChildren().add(retourMenu);
 		
 		pioche.getChildren().addAll(cartesCachePioche,carteDevoilePioche);
 		pioche.setSpacing(10);
@@ -189,7 +204,7 @@ public class VueTableau {
 //		hautTableauJeu.add(pileCarreau, 3, 0);
 //		hautTableauJeu.add(pileTrefle, 4, 0);
 		hautTableauJeu.getChildren().addAll(pioche,spacer,pileFondation);
-		
+		top.getChildren().addAll(navBar,hautTableauJeu);
 		basTableauJeu.add(colonne1, 0, 0);
 		basTableauJeu.add(colonne2, 1, 0);
 		basTableauJeu.add(colonne3, 2, 0);
@@ -197,10 +212,10 @@ public class VueTableau {
 		basTableauJeu.add(colonne5, 4, 0);
 		basTableauJeu.add(colonne6, 5, 0);
 		basTableauJeu.add(colonne7, 6, 0);
-		
+		basTableauJeu.setAlignment(Pos.TOP_CENTER);
 
-		root.setTop(hautTableauJeu);
-		root.setCenter(basTableauJeu); 
+		root.setTop(top);
+		root.setCenter(basTableauJeu);
 		root.getStyleClass().add("bg");
 	    root.setPadding(new Insets(0, 20, 0, 20));
 	    
@@ -324,22 +339,34 @@ public class VueTableau {
 	public void alertFinPartie() {
 		//Creating a dialog
 	      Dialog<ButtonType> dialog = new Dialog<>();
+	      //dialog.getDialogPane().getStyleClass().add("dialogVictoire");
 	      //Setting the title
 	      dialog.setTitle("Victoire !");
-	      ButtonType bouttonRejouer = new ButtonType("Rejouer", ButtonData.OK_DONE);
-	      ButtonType bouttonMenu = new ButtonType("Menu Principale", ButtonData.BACK_PREVIOUS);
+	      ButtonType boutonRejouer = new ButtonType("Rejouer", ButtonData.OK_DONE);
+	      ButtonType boutonMenu = new ButtonType("Menu Principale", ButtonData.BACK_PREVIOUS);
+	      
+	    //Style 
+	      Button boutonR = (Button) dialog.getDialogPane().lookupButton(boutonRejouer);
+	      boutonR.getStyleClass().add("boutonTableau");
+	      Button boutonM = (Button) dialog.getDialogPane().lookupButton(boutonMenu);
+	      boutonM.getStyleClass().add("boutonTableau");
+	      
 	      //Setting the content of the dialog
 	      dialog.setContentText("Que voulez-vous faire ?");
 	      //Adding buttons to the dialog pane
-	      dialog.getDialogPane().getButtonTypes().addAll(bouttonRejouer,bouttonMenu);
+	      dialog.getDialogPane().getButtonTypes().addAll(boutonRejouer,boutonMenu);
 
 	      dialog.showAndWait().ifPresent(response -> {
-	    	  if (response == bouttonRejouer) {
+	    	  if (response == boutonRejouer) {
 	    		  controllerTableau.rejouerPartie();
-	    	  }else if (response == bouttonMenu) {
+	    	  }else if (response == boutonMenu) {
 	    		  controllerTableau.retourMenu();
 	    	  }
-	      });       
+	    	  
+	    	  
+	      });  
+	      
+	      
 	}     
 }
 	
