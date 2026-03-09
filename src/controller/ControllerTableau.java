@@ -1,24 +1,14 @@
 package controller;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import models.Carte;
 import models.ImageCarte;
 import models.Jeu_Solitaire;
 import view.VueAccueil;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import application.Main;
-
 import static utilitaire.Utility.creerImage;
 import static utilitaire.Utility.creerImageView;
 
@@ -45,11 +35,7 @@ public class ControllerTableau extends Controller {
     List<Carte> pileFondatricePique = new ArrayList<Carte>();
     List<Carte> pileFondatriceCarreau = new ArrayList<Carte>();
     List<Carte> pileFondatriceTrefle = new ArrayList<Carte>();
-    boolean pileFondatriceCompleteCoeur = false;
-    boolean pileFondatriceCompletePique = false;
-    boolean pileFondatriceCompleteCarreau = false;
-    boolean pileFondatriceCompleteTrefle = false;
-    boolean victoire = false;
+
     // ----------------------- CONSTRUCTEUR ----------------------
     public ControllerTableau(Jeu_Solitaire jeu, DragDropHandler controllerDragDrop, ControllerAccueil controllerAccueil) {
         this.jeu = jeu;
@@ -107,22 +93,6 @@ public class ControllerTableau extends Controller {
         this.target = target;
     }
 
-//    public Jeu_Solitaire getJeu() {
-//        return jeu;
-//    }
-//
-//    public void setJeu(Jeu_Solitaire jeu) {
-//        this.jeu = jeu;
-//    }
-//
-//    public List<Carte> getPaquet() {
-//        return paquet;
-//    }
-//
-//    public void setPaquet(List<Carte> paquet) {
-//        this.paquet = paquet;
-//    }
-
     public List<Carte> getPioche() {
         return pioche;
     }
@@ -150,11 +120,11 @@ public class ControllerTableau extends Controller {
 
     private void initialiserPartie() {
         paquet = jeu.creerPaquet();
-//        System.out.println("**** taille du jeu avant de distribuer les carte : " + paquet.size());
+
         for (int i = 0; i < 28; i++) {
             carteSurTableau.add(paquet.get(i));
-
         }
+
         for (int i = 28; i < paquet.size(); i++) {
             pioche.add(paquet.get(i));
         }
@@ -163,7 +133,7 @@ public class ControllerTableau extends Controller {
     }
 
     /**
-     *
+     * Vérifie si une carte est déposable à un endroit dans une carte est déplacé sur le tableau de jeu
      */
     public void carteEstDeposable() {
 
@@ -176,7 +146,6 @@ public class ControllerTableau extends Controller {
                         target.getId().equals("colonne4") || target.getId().equals("colonne5") || target.getId().equals("colonne6") || target.getId().equals("colonne7")) {
                     if (!(carteTarget.estRougeOuNoir().equals(carteSource.estRougeOuNoir())) && carteSource.getValeur_carte() + 1 == carteTarget.getValeur_carte()) {
                         if (tailleColonne == indexCarteColonne) {
-//                            System.out.println("++++++++++++++++++++++ une seule carte à déplacer");
                             transfertCarteSansSuppresionImageView();
                         } else {
                             transfertPileCartes();
@@ -195,7 +164,6 @@ public class ControllerTableau extends Controller {
                         "carteVide_colonne6".equals(dernierNoeud.getId()) || dernierNoeud.getId().equals("carteVide_colonne7")) {
                     if (carteSource.getValeur_carte() == 13) {
                         if (tailleColonne == indexCarteColonne) {
-//                            System.out.println("++++++++++++++++++++++ une seule carte à déplacer");
                             transfertCarteAvecSuppresionImageView();
                         } else {
                             target.getChildren().removeFirst();
@@ -225,28 +193,27 @@ public class ControllerTableau extends Controller {
         }
 
         //retirer une carte sur les piles fondations
-        if(source.getId().equals("pileCoeur")){
+        if(source.getId().equals("pileCoeur") && !(source.getId().equals(target.getId()))){
             retirerCartePileFondation(pileFondatriceCoeur);
         }
-        if(source.getId().equals("pilePique")){
+        if(source.getId().equals("pilePique")&& !(source.getId().equals(target.getId()))){
             retirerCartePileFondation(pileFondatricePique);
         }
 
-        if(source.getId().equals("pileTrefle")){
+        if(source.getId().equals("pileTrefle")&& !(source.getId().equals(target.getId()))){
             retirerCartePileFondation(pileFondatriceTrefle);
         }
 
-        if(source.getId().equals("pileCarreau")){
+        if(source.getId().equals("pileCarreau")&& !(source.getId().equals(target.getId()))){
             retirerCartePileFondation(pileFondatriceCarreau);
         }
-        //finDePartie();
-        System.out.println("******** taille carteSurTableau = "+ carteSurTableau.size());
-        System.out.println("******** taille pioche = "+ pioche.size());
-        System.out.println("******** taille pile fondation coeur = "+ pileFondatriceCoeur.size());
-        System.out.println("******** taille pile fondation pique = "+ pileFondatricePique.size());
-        System.out.println("******** taille pile fondation carreau = "+ pileFondatriceCarreau.size());
-        System.out.println("******** taille pile fondation trefle = "+ pileFondatriceTrefle.size());
-        System.out.println("******** total carte = " + (carteSurTableau.size()+pioche.size()+pileFondatriceCoeur.size()+pileFondatricePique.size()+pileFondatriceTrefle.size()+pileFondatriceCarreau.size()));
+//        System.out.println("******** taille carteSurTableau = "+ carteSurTableau.size());
+//        System.out.println("******** taille pioche = "+ pioche.size());
+//        System.out.println("******** taille pile fondation coeur = "+ pileFondatriceCoeur.size());
+//        System.out.println("******** taille pile fondation pique = "+ pileFondatricePique.size());
+//        System.out.println("******** taille pile fondation carreau = "+ pileFondatriceCarreau.size());
+//        System.out.println("******** taille pile fondation trefle = "+ pileFondatriceTrefle.size());
+//        System.out.println("******** total carte = " + (carteSurTableau.size()+pioche.size()+pileFondatriceCoeur.size()+pileFondatricePique.size()+pileFondatriceTrefle.size()+pileFondatriceCarreau.size()));
 
     }
 
@@ -254,19 +221,16 @@ public class ControllerTableau extends Controller {
         int valSource = carteSource.getValeur_carte();
         //SI LA CARTE PROVIENT DE LA PIOCHE
         if (source.getId().equals("pioche")) {
-//            System.out.println("----CONTROLLER TABLEAU avant if cpt pioche : " + cptPioche + " Taille de la pioche : " + pioche.size());
             if ((target.getChildren().size() == 1 && valSource == 1)) {
+
                 target.getChildren().removeFirst();
                 transfertCartePioche();
-
-                //Carte déjà supprimé de la pioche dans transfertCartePioche
                 pilefondation.add(carteSource);
 
             } else if ((carteSource.getValeur_carte() == carteTarget.getValeur_carte() + 1)) {
+
                 target.getChildren().removeFirst();
                 transfertCartePioche();
-
-                //Carte déjà supprimé de la pioche dans transfertCartePioche
                 pilefondation.add(carteSource);
 
             } else {
@@ -276,16 +240,16 @@ public class ControllerTableau extends Controller {
         } else {
 
             if (target.getChildren().size() == 1 && valSource == 1) {
+
                 target.getChildren().removeFirst();
                 transfertCartePlateau();
-
                 carteSurTableau.remove(carteSource);
                 pilefondation.add(carteSource);
 
             } else if (carteSource.getValeur_carte() == carteTarget.getValeur_carte() + 1) {
+
                 target.getChildren().removeFirst();
                 transfertCartePlateau();
-
                 carteSurTableau.remove(carteSource);
                 pilefondation.add(carteSource);
 
@@ -294,7 +258,9 @@ public class ControllerTableau extends Controller {
             }
         }
     }
-
+    /**
+     * Méthode permettant de compter les cartes à jouer pour s'assurer qu'aucune carte n'est rajouté en cours de partie
+     * */
     public void majListCarte(VBox target){
         if (target.getId().equals("pileCoeur")){
             pileFondatriceCoeur.add(carteSource);
@@ -319,11 +285,14 @@ public class ControllerTableau extends Controller {
     }
 
     public void transfertCartePioche() {
+        System.out.println("--------------------------------TRANSFERT CARTE PIOCHE-----------------------------------");
+        System.out.println("cptPioche : " + cptPioche + " Taille pioche : "+pioche.size());
         target.getChildren().add(ivSource);
         pioche.remove(carteSource);
         if (cptPioche == 0) {
             ImageView nouvelleImgPioche = creerImageView(creerImage("pioche.png"));
             source.getChildren().add(nouvelleImgPioche);
+            cptPioche--;
         } else {
             cptPioche--;
             pioche.get(cptPioche).setImageCarteAafficher(ImageCarte.RECTO);
@@ -363,7 +332,6 @@ public class ControllerTableau extends Controller {
     }
 
     public void transfertPileCartes(){
-//        System.out.println("++++++++++++++++++++++ pile de cartes à déplacer");
         List<Node> listeCarteColonne = new ArrayList<>();
         for (int i = indexCarteColonne; i < source.getChildren().size(); i++) {
             listeCarteColonne.add(source.getChildren().get(i));
@@ -374,8 +342,9 @@ public class ControllerTableau extends Controller {
     }
 
     public void retirerCartePileFondation(List<Carte> pileFondatrice){
-//        System.out.println("&&&&&&&&&&&&&&&&&& Carte d'une pile fondation déplacé vers le plateau");
-//            System.out.println("pile " + source.getId());
+        System.out.println("&&&&&&&&&&&&&&&&&& Carte d'une pile fondation déplacé vers le plateau");
+        System.out.println("source.getParent " + source.getParent() + " target.getParent " + target.getParent());
+        System.out.println("source " + source.getId() + " target " + target.getId());
 
         Carte carteDessousPileFondation = null;
         ImageView nouvelleImgfondation = creerImageView(creerImage("pioche.png"));

@@ -98,21 +98,17 @@ public class VueTableau {
 
 		pilePique.getChildren().add(Utility.creerImageView(Utility.creerImage("pilePique.png")));
 		pilePique.setId("pilePique");
-		//pilePique.setStyle("-fx-background-color : black; ");
 
 		pileCarreau.getChildren().add(Utility.creerImageView(Utility.creerImage("pileCarreau.png")));
 		pileCarreau.setId("pileCarreau");
-		//pileCarreau.setStyle("-fx-background-color : orange; ");
 
 		pileTrefle.getChildren().add(Utility.creerImageView(Utility.creerImage("pileTrefle.png")));
 		pileTrefle.setId("pileTrefle");
-		//pileTrefle.setStyle("-fx-background-color : grey; ");
 
 		carteDevoilePioche.setId("pioche");
 
 		listColl.add(colonne1);
 		colonne1.setId("colonne1");
-		//colonne1.getStyleClass().add("colonne");
 
 		listColl.add(colonne2);
 		colonne2.setId("colonne2");
@@ -149,12 +145,7 @@ public class VueTableau {
 		pileFondation.setId("fondation");
 		pileFondation.setSpacing(10);
 		pileFondation.setPadding(new Insets(0, 40, 0, 0));
-		
-		//System.out.println("VueTableau / taille du jeu avant de distribuer les carte : "+ carteDepart.size());
-		/**
-		 * Distribution des cartes sur le plateau de jeu
-		 * todo franchement j'ai un doute sur l'affichage des cartes
-		 */
+
 			for(int i=0;i<7;i++) {
 				for(int j=0;j< i+1;j++) {
 					ImageView iv = Utility.creerImageViewCarteVerso(carteSurTableau.get(index));
@@ -184,7 +175,7 @@ public class VueTableau {
 		
 		affichageFinPartie();
 
-		
+/* ****************** Style de la page ****************** */
 		colonne1.setSpacing(-200);
 		colonne2.setSpacing(-200);
 		colonne3.setSpacing(-200);
@@ -193,16 +184,7 @@ public class VueTableau {
 		colonne6.setSpacing(-200);
 		colonne7.setSpacing(-200);
 
-//		hautTableauJeu.getChildren().addAll(pioche,pileFondation);
 		hautTableauJeu.setPadding(new Insets(5));
-//		hautTableauJeu.setHgap(10);
-//		hautTableauJeu.setVgap(10); 
-		
-//		hautTableauJeu.add(pioche, 0, 0);
-//		hautTableauJeu.add(pileCoeur, 1, 0);
-//		hautTableauJeu.add(pilePique, 2, 0);
-//		hautTableauJeu.add(pileCarreau, 3, 0);
-//		hautTableauJeu.add(pileTrefle, 4, 0);
 		hautTableauJeu.getChildren().addAll(pioche,spacer,pileFondation);
 		top.getChildren().addAll(navBar,hautTableauJeu);
 		basTableauJeu.add(colonne1, 0, 0);
@@ -218,8 +200,8 @@ public class VueTableau {
 		root.setCenter(basTableauJeu);
 		root.getStyleClass().add("bg");
 	    root.setPadding(new Insets(0, 20, 0, 20));
-	    
-	    
+
+		/* ****************** set de la scene sur la stage ****************** */
 		Scene scene = new Scene(root);
 		try {
         	scene.getStylesheets().add(getClass().getResource("/application/application.css").toExternalForm());	 
@@ -228,11 +210,15 @@ public class VueTableau {
         }
 		Main.setMainScene(scene);
 	}
-
+/**
+ * Méthode permettant d'afficher l' imageView de la pioche
+ * */
 	public void afficherNouvelleCartePioche() {
+
 		cartesCachePioche.setOnMouseClicked(new EventHandler <MouseEvent>(){
 			public void handle(MouseEvent event) {
-				//System.out.println("VUE | cptPioche : " + cptPioche + " Taille pioche : "+cartePioche.size());
+
+				System.out.println("cptPioche : " + controllerTableau.getCptPioche() + " Taille pioche : "+cartePioche.size());
 				if(cartePioche.size()== controllerTableau.getCptPioche()){
 					controllerTableau.setCptPioche(controllerTableau.getCptPioche() - 1);
 				}
@@ -240,7 +226,11 @@ public class VueTableau {
 					cartePioche.get(controllerTableau.getCptPioche()).setImageCarteAafficher(ImageCarte.VERSO);
 				}
 				controllerTableau.setCptPioche(controllerTableau.getCptPioche() + 1);
-				//System.out.println("Début de la méthode afficherNouvelleCartePioche " + carteDepart.get(cptPioche).toString());
+				System.out.println("cptPioche : " + controllerTableau.getCptPioche() + " Taille pioche : "+cartePioche.size());
+				if(cartePioche.size()==1 && controllerTableau.getCptPioche()==0){
+					System.out.println("cartePioche.size()==1 && controllerTableau.getCptPioche()==0 = " + (cartePioche.size()==1 && controllerTableau.getCptPioche()==0));
+					cartesCachePioche.getChildren().clear();
+				}
 				ImageView imageViewCarteDePioche = (ImageView) carteDevoilePioche.getChildren().getFirst();
 
 				if(cartePioche.size()==controllerTableau.getCptPioche()){
@@ -264,7 +254,7 @@ public class VueTableau {
 	}
 
 	/**
-	 * méthode permettant de remplacer l'image de la derniere carte de chaque pile pour la remplacer par la carte coté recto
+	 * méthode permettant de remplacer l'image verso de la derniere carte de chaque pile pour la remplacer par la carte coté recto
 	 */
 	public void afficherDerniereCarteColonneEtDragable() {
 
@@ -272,11 +262,8 @@ public class VueTableau {
 			VBox colonne = listColl.get(i);
 			//Si la colonne est vide on ajoute l'imageView de carte vide pour pouvoir ajouter un roi dessus
 			if(colonne.getChildren().isEmpty()){
-//				System.out.println("--------------------------Colonne vide " + colonne.getId());
 				ImageView imageViewPile = creerImageView(creerImage("pioche.png"));
-
 				imageViewPile.setId("carteVide_"+colonne.getId());
-//				System.out.println(imageViewPile.getId());
 				colonne.getChildren().add(imageViewPile);
 				continue;
 			}
@@ -306,7 +293,9 @@ public class VueTableau {
 			}
 		}
 	}
-	
+	/**
+	 * méthode permettant d'appeler AffichageDerniereCarteColonne() si une carte est retiré d'une des piles
+	 */
 	public void miseAjourAffichageDerniereCarteColonne(){
     	for (VBox colonne : listColl) {
         	colonne.getChildren().addListener((ListChangeListener<Node>) change -> {
@@ -318,7 +307,10 @@ public class VueTableau {
         });
     	}
 	}
-	
+
+	/**
+	 * Méthode permettant d'appeler la méthode du controlleur pour vérifier la fin de partie quand une carte est changé de pile
+	 */
 	public void affichageFinPartie() {
 		for (VBox colonne : listColl) {
 			colonne.getChildren().addListener((ListChangeListener<Node>) change -> {
@@ -335,25 +327,19 @@ public class VueTableau {
 			});
 		}
 	}
-	
+
+	/**
+	 * Méthode permettant afficher une dialog pour rejouer ou retourner au menu
+	 */
 	public void alertFinPartie() {
-		//Creating a dialog
+
 	      Dialog<ButtonType> dialog = new Dialog<>();
-	      //dialog.getDialogPane().getStyleClass().add("dialogVictoire");
-	      //Setting the title
 	      dialog.setTitle("Victoire !");
 	      ButtonType boutonRejouer = new ButtonType("Rejouer", ButtonData.OK_DONE);
 	      ButtonType boutonMenu = new ButtonType("Menu Principale", ButtonData.BACK_PREVIOUS);
-	      
-	    //Style 
-	      Button boutonR = (Button) dialog.getDialogPane().lookupButton(boutonRejouer);
-	      boutonR.getStyleClass().add("boutonTableau");
-	      Button boutonM = (Button) dialog.getDialogPane().lookupButton(boutonMenu);
-	      boutonM.getStyleClass().add("boutonTableau");
-	      
-	      //Setting the content of the dialog
+
 	      dialog.setContentText("Que voulez-vous faire ?");
-	      //Adding buttons to the dialog pane
+
 	      dialog.getDialogPane().getButtonTypes().addAll(boutonRejouer,boutonMenu);
 
 	      dialog.showAndWait().ifPresent(response -> {
@@ -363,9 +349,7 @@ public class VueTableau {
 	    		  controllerTableau.retourMenu();
 	    	  }
 	    	  
-	    	  
-	      });  
-	      
+	      });
 	      
 	}     
 }
