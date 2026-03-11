@@ -25,13 +25,11 @@ public class Main extends Application {
     private static Scene mainScene;
 
 	// ----------------------- INSTANCIATION DES CONTROLLEUR DE L'APPLICATION -------------------------
-	//ControllerAccueil controllerAccueil = new ControllerAccueil(controllerTableau);
-	//ControllerTableau controllerTableau = new ControllerTableau(controllerDragDrop);
 	private DragDropHandler controllerDragDrop = new DragDropHandler();
 	private ControllerAccueil controllerAccueil = new ControllerAccueil(controllerDragDrop);
+
 	@Override
 	public void start(Stage stage) {
-		
 
 		try {
 			primaryStage = stage;
@@ -40,10 +38,6 @@ public class Main extends Application {
 			primaryStage.setWidth(largeur);
 	        primaryStage.setHeight(hauteur);
 	        primaryStage.setTitle("Solitaire");
-	        
-//			mainScene = new Scene(root);
-//	        mainScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-////			primaryStage.setScene(mainScene);
 			primaryStage.show();
 			
 		} catch(Exception e) {
@@ -65,7 +59,7 @@ public class Main extends Application {
 	public static void setPrimaryStage(Stage mainStage) {
 		Main.primaryStage = mainStage;
 	}
-	
+
 	public static Scene getMainScene() {
 		return primaryStage.getScene();
 	}

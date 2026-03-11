@@ -41,7 +41,6 @@ public class Jeu_Solitaire {
 			valeurCarte =  i % 13;
 			}
 			imgCarte = i +".jpg";
-			//System.out.println("Jeu_Solitaire: valeur de i : "+i + " valCarte : "+valeurCarte+couleurCarte+" imgcarte : "+imgCarte);
 			paquet.add(new Carte(valeurCarte,couleurCarte,imgCarte));	
 		}
 		System.out.println("Jeu_Solitaire: Avant mélange : " + paquet);

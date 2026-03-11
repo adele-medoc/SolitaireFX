@@ -1,22 +1,18 @@
 package controller;
 
 import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
 import models.Carte;
 
 public class DragDropHandler extends Controller {
-//    ControllerTableau controller;
 
     public DragDropHandler(){}
 
-//    public DragDropHandler(ControllerTableau controllerTableau) {
-//        this.controller = controllerTableau;
-//    }
-
+    /**
+     *  méthode pour le controle des évenemments de drag
+     */
     public void eventDrag(ImageView noeud, ControllerTableau controller){
         noeud.setOnDragDetected(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
@@ -27,7 +23,7 @@ public class DragDropHandler extends Controller {
                 ClipboardContent content = new ClipboardContent();
                 content.putString(noeud.getUserData().toString());
                 content.putImage(noeud.getImage());
-//                System.out.println("ClipboardContent = "+content);
+
                 db.setContent(content);
                 VBox vbSource = (VBox) noeud.getParent();
 
@@ -35,8 +31,6 @@ public class DragDropHandler extends Controller {
                 controller.setIvSource(noeud);
                 controller.setCarteSource((Carte) noeud.getUserData());
                 controller.setIndexCarteColonne(vbSource.getChildren().indexOf(noeud));
-//                System.out.println("carte source : "+noeud.getUserData().toString());
-//                System.out.println("vbSource.getChildren().indexOf(noeud) -> index de la carte dans la colonne "+ vbSource.getChildren().indexOf(noeud) + " sur " + vbSource.getChildren().indexOf(vbSource.getChildren().getLast()));
                 event.consume();
             }
         });
@@ -53,8 +47,9 @@ public class DragDropHandler extends Controller {
 
     }
 
-    /*   méthode pour les le controle des évenemments drop, le target est situé sur un VBox
-     * */
+    /**
+     *  Méthode pour le controle des évenemments drop, le target est situé sur un VBox
+     */
     public void eventDrop(VBox noeud, ControllerTableau controller){
         //System.out.println("************** passé par eventdragndrop VBox ***************");
 
@@ -82,15 +77,7 @@ public class DragDropHandler extends Controller {
                 if (db.hasString()) {
                     VBox vBoxTarget = noeud;
                 Carte carteTarget = (Carte)vBoxTarget.getChildren().getLast().getUserData();;
-//                System.out.println("**************************** Mouvement Drag'n'Drop avant envoie au controlleur *************************************");
-//                //System.out.println("source.getUserData() : " + carteSource.toString());
-//                System.out.println("event.getGestureSource() : " + (event.getGestureSource()));
-//                System.out.println("event.getGestureSource().getParents() : " + (((ImageView) event.getGestureSource()).getParent()));
-//                System.out.println("target = " + vBoxTarget.toString() +" carte target : "+ carteTarget);
-//                System.out.println("*********************************************************************************************************************");
-                //controller.setCarteSource(((Carte) event.getGestureSource()).getUserData());
-                //controller.setSource((VBox) ((ImageView) event.getGestureSource()).getParent());
-                //controller.setIvSource((ImageView) event.getGestureSource());
+
                 controller.setTarget(vBoxTarget);
                 controller.setCarteTarget(carteTarget);
                 controller.carteEstDeposable();

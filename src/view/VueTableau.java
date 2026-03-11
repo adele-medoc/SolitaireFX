@@ -58,7 +58,6 @@ public class VueTableau {
 		VBox pileTrefle = new VBox();
 	
 	GridPane  basTableauJeu = new GridPane ();
-		
 	List<VBox> listColl = new ArrayList<VBox>();
 		VBox colonne1 = new VBox();
 		VBox colonne2 = new VBox();
@@ -82,19 +81,79 @@ public class VueTableau {
 	//---------------------------------------AUTRES METHODES-----------------------------------------------------------------------
 	public void afficherTableau() {
 
-	    Region spacer = new Region();
-	    HBox.setHgrow(spacer, Priority.ALWAYS);
-	    
+
+
+		Button retourMenu = new Button("Retour Menu");
+		retourMenu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+            	new VueAccueil(controllerAccueil);
+            }
+        });
+		retourMenu.getStyleClass().add("boutonTableau");
+		navBar.getChildren().add(retourMenu);
+		
+		pioche.getChildren().addAll(cartesCachePioche,carteDevoilePioche);
+		pioche.setSpacing(10);
+		pioche.setId("VboxPioche");
+		pileFondation.getChildren().addAll(pileCoeur,pilePique,pileCarreau,pileTrefle);
+		pileFondation.setId("fondation");
+		pileFondation.setSpacing(10);
+		pileFondation.setPadding(new Insets(0, 40, 0, 0));
+
+			for(int i=0;i<7;i++) {
+				for(int j=0;j< i+1;j++) {
+					ImageView iv = Utility.creerImageViewCarteVerso(carteSurTableau.get(index));
+                    assert iv != null;
+//					iv.setTranslateY(-(Y_OFFSET * j));
+
+						listColl.get(i).getChildren().add(iv);
+						index++;
+				}
+			}
+
+
+
+		controllerEvent.eventDrop(colonne1,controllerTableau);
+		controllerEvent.eventDrop(colonne2,controllerTableau);
+		controllerEvent.eventDrop(colonne3,controllerTableau);
+		controllerEvent.eventDrop(colonne4,controllerTableau);
+		controllerEvent.eventDrop(colonne5,controllerTableau);
+		controllerEvent.eventDrop(colonne6,controllerTableau);
+		controllerEvent.eventDrop(colonne7,controllerTableau);
+		controllerEvent.eventDrop(pileCarreau,controllerTableau);
+		controllerEvent.eventDrop(pileCoeur,controllerTableau);
+		controllerEvent.eventDrop(pileTrefle,controllerTableau);
+		controllerEvent.eventDrop(pilePique,controllerTableau);
+
+		
+		afficherDerniereCarteColonneEtDragable();
+		afficherNouvelleCartePioche();
+		miseAjourAffichageDerniereCarteColonne();
+		gererChangementCartesColonnes();
+
+		// lorsque la fenêtre est redimentionné espacementAffichageCartes() est appelé sur toutes les colonnes
+		basTableauJeu.heightProperty().addListener((obs, oldVal, newVal) -> {
+			for (VBox colonne : listColl) {
+				espacementAffichageCartes(colonne);
+			}
+		});
+
+		/* ****************** Style de la page et ajout des éléments dans les différents conteneurs ****************** */
+
+		Region spacer = new Region();
+		HBox.setHgrow(spacer, Priority.ALWAYS);
+
 		hautTableauJeu.setId("hautTableauJeu");
 		basTableauJeu.setId("basTableauJeu");
-		
+
 		cartesCachePioche.getChildren().add(Utility.creerImageView(Utility.creerImage("verso.jpg")));
 		carteDevoilePioche.getChildren().add(Utility.creerImageView(Utility.creerImage("pioche.png")));
 		carteDevoilePioche.setPrefHeight(250);
-			
+
 		pileCoeur.getChildren().add(Utility.creerImageView(Utility.creerImage("pileCoeur.png")));
 		pileCoeur.setId("pileCoeur");
-		
+
 
 		pilePique.getChildren().add(Utility.creerImageView(Utility.creerImage("pilePique.png")));
 		pilePique.setId("pilePique");
@@ -128,61 +187,9 @@ public class VueTableau {
 		listColl.add(colonne7);
 		colonne7.setId("colonne7");
 
-		Button retourMenu = new Button("Retour Menu");
-		retourMenu.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-            	new VueAccueil(controllerAccueil);
-            }
-        });
-		retourMenu.getStyleClass().add("boutonTableau");
-		navBar.getChildren().add(retourMenu);
-		
-		pioche.getChildren().addAll(cartesCachePioche,carteDevoilePioche);
-		pioche.setSpacing(10);
-		pioche.setId("VboxPioche");
-		pileFondation.getChildren().addAll(pileCoeur,pilePique,pileCarreau,pileTrefle);
-		pileFondation.setId("fondation");
-		pileFondation.setSpacing(10);
-		pileFondation.setPadding(new Insets(0, 40, 0, 0));
-
-			for(int i=0;i<7;i++) {
-				for(int j=0;j< i+1;j++) {
-					ImageView iv = Utility.creerImageViewCarteVerso(carteSurTableau.get(index));
-//					iv.setTranslateY(j*5);
-						listColl.get(i).getChildren().add(iv);
-						index++;
-				}
-			}
-
-		controllerEvent.eventDrop(colonne1,controllerTableau);
-		controllerEvent.eventDrop(colonne2,controllerTableau);
-		controllerEvent.eventDrop(colonne3,controllerTableau);
-		controllerEvent.eventDrop(colonne4,controllerTableau);
-		controllerEvent.eventDrop(colonne5,controllerTableau);
-		controllerEvent.eventDrop(colonne6,controllerTableau);
-		controllerEvent.eventDrop(colonne7,controllerTableau);
-		controllerEvent.eventDrop(pileCarreau,controllerTableau);
-		controllerEvent.eventDrop(pileCoeur,controllerTableau);
-		controllerEvent.eventDrop(pileTrefle,controllerTableau);
-		controllerEvent.eventDrop(pilePique,controllerTableau);
-
-		
-		afficherDerniereCarteColonneEtDragable();
-
-		afficherNouvelleCartePioche();
-		miseAjourAffichageDerniereCarteColonne();
-		
-		affichageFinPartie();
-
-/* ****************** Style de la page ****************** */
-		colonne1.setSpacing(-200);
-		colonne2.setSpacing(-200);
-		colonne3.setSpacing(-200);
-		colonne4.setSpacing(-200);
-		colonne5.setSpacing(-200);
-		colonne6.setSpacing(-200);
-		colonne7.setSpacing(-200);
+		for (VBox col : listColl) {
+			col.setSpacing(-200);
+		}
 
 		hautTableauJeu.setPadding(new Insets(5));
 		hautTableauJeu.getChildren().addAll(pioche,spacer,pileFondation);
@@ -195,6 +202,7 @@ public class VueTableau {
 		basTableauJeu.add(colonne6, 5, 0);
 		basTableauJeu.add(colonne7, 6, 0);
 		basTableauJeu.setAlignment(Pos.TOP_CENTER);
+
 
 		root.setTop(top);
 		root.setCenter(basTableauJeu);
@@ -211,14 +219,13 @@ public class VueTableau {
 		Main.setMainScene(scene);
 	}
 /**
- * Méthode permettant d'afficher l' imageView de la pioche
+ * Méthode permettant d'afficher l' imageView de la pioche à chaque clique sur cartesCachePioche
  * */
 	public void afficherNouvelleCartePioche() {
 
 		cartesCachePioche.setOnMouseClicked(new EventHandler <MouseEvent>(){
 			public void handle(MouseEvent event) {
 
-				System.out.println("cptPioche : " + controllerTableau.getCptPioche() + " Taille pioche : "+cartePioche.size());
 				if(cartePioche.size()== controllerTableau.getCptPioche()){
 					controllerTableau.setCptPioche(controllerTableau.getCptPioche() - 1);
 				}
@@ -226,9 +233,9 @@ public class VueTableau {
 					cartePioche.get(controllerTableau.getCptPioche()).setImageCarteAafficher(ImageCarte.VERSO);
 				}
 				controllerTableau.setCptPioche(controllerTableau.getCptPioche() + 1);
-				System.out.println("cptPioche : " + controllerTableau.getCptPioche() + " Taille pioche : "+cartePioche.size());
+
 				if(cartePioche.size()==1 && controllerTableau.getCptPioche()==0){
-					System.out.println("cartePioche.size()==1 && controllerTableau.getCptPioche()==0 = " + (cartePioche.size()==1 && controllerTableau.getCptPioche()==0));
+
 					cartesCachePioche.getChildren().clear();
 				}
 				ImageView imageViewCarteDePioche = (ImageView) carteDevoilePioche.getChildren().getFirst();
@@ -254,7 +261,8 @@ public class VueTableau {
 	}
 
 	/**
-	 * méthode permettant de remplacer l'image verso de la derniere carte de chaque pile pour la remplacer par la carte coté recto
+	 * Méthode permettant de remplacer l'image verso de la derniere carte de chaque pile
+	 * pour la remplacer par la carte coté recto
 	 */
 	public void afficherDerniereCarteColonneEtDragable() {
 
@@ -302,34 +310,59 @@ public class VueTableau {
             while (change.next()) {
                 if (change.wasRemoved()) {
 					Platform.runLater(this::afficherDerniereCarteColonneEtDragable);
-                }
+//					espacementAffichageCartes(colonne);
+				}
             }
         });
     	}
 	}
 
 	/**
-	 * Méthode permettant d'appeler la méthode du controlleur pour vérifier la fin de partie quand une carte est changé de pile
+	 * méthode calculant le spacing à appliquer sur une colonne si les cartes dépasses de la fenêtre
 	 */
-	public void affichageFinPartie() {
+	public void espacementAffichageCartes(VBox colonne){
+
+		double hauteurDispo = basTableauJeu.getHeight();
+		int nbCartesColonne = colonne.getChildren().size();
+
+		double hauteurCarte = 250;
+		double decalage = hauteurCarte + colonne.getSpacing();
+
+		double hauteurColonne = hauteurCarte + (nbCartesColonne - 1) * decalage;
+
+		if(nbCartesColonne <= 1) return;
+
+		if(hauteurColonne > hauteurDispo){
+			colonne.setSpacing(colonne.getSpacing() - 5);
+		}
+
+	}
+
+	/**
+	 * Méthode qui permet lorsque une carte est changé de pile :
+	 * - d'appeler la méthode du controlleur pour vérifier la fin de partie
+	 * - d'appeler la méthode espacementAffichageCartes pour modifier l'espacement des cartes
+	 */
+	public void gererChangementCartesColonnes() {
 		for (VBox colonne : listColl) {
 			colonne.getChildren().addListener((ListChangeListener<Node>) change -> {
 				while (change.next()) {
 					if(change.wasAdded()||change.wasRemoved()) {
+						espacementAffichageCartes(colonne);
 						boolean victoire = controllerTableau.finDePartie();
-						
+
 						if(victoire) {
 							alertFinPartie();
 						}
 					}
-										
+
 				}
 			});
 		}
 	}
 
 	/**
-	 * Méthode permettant afficher une dialog pour rejouer ou retourner au menu
+	 * Méthode permettant afficher une dialog pour rejouer ou retourner au menu quand la partie est gagné
 	 */
 	public void alertFinPartie() {
 
@@ -351,7 +384,7 @@ public class VueTableau {
 	    	  
 	      });
 	      
-	}     
+	}
 }
 	
 

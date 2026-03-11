@@ -128,8 +128,6 @@ public class ControllerTableau extends Controller {
         for (int i = 28; i < paquet.size(); i++) {
             pioche.add(paquet.get(i));
         }
-        System.out.println("******** taille carteSurTableau : " + carteSurTableau.size() + "  carte ajouté : " + carteSurTableau.toString() + "\n ");
-        System.out.println("************ taille pioche : " + pioche.size() + "  carte ajouté : " + pioche.toString() + "\n ");
     }
 
     /**
@@ -175,12 +173,10 @@ public class ControllerTableau extends Controller {
         }
 
         //ajout d'une carte sur les piles fondations
-
         String couleurSource = carteSource.getCouleur_carte();
 
         if (couleurSource.equals("coeur") && target.getId().equals("pileCoeur")) {
             carteDeposablePileFondation(pileFondatriceCoeur);
-
         }
         if (couleurSource.equals("pique") && target.getId().equals("pilePique")) {
             carteDeposablePileFondation(pileFondatricePique);
@@ -207,14 +203,6 @@ public class ControllerTableau extends Controller {
         if(source.getId().equals("pileCarreau")&& !(source.getId().equals(target.getId()))){
             retirerCartePileFondation(pileFondatriceCarreau);
         }
-//        System.out.println("******** taille carteSurTableau = "+ carteSurTableau.size());
-//        System.out.println("******** taille pioche = "+ pioche.size());
-//        System.out.println("******** taille pile fondation coeur = "+ pileFondatriceCoeur.size());
-//        System.out.println("******** taille pile fondation pique = "+ pileFondatricePique.size());
-//        System.out.println("******** taille pile fondation carreau = "+ pileFondatriceCarreau.size());
-//        System.out.println("******** taille pile fondation trefle = "+ pileFondatriceTrefle.size());
-//        System.out.println("******** total carte = " + (carteSurTableau.size()+pioche.size()+pileFondatriceCoeur.size()+pileFondatricePique.size()+pileFondatriceTrefle.size()+pileFondatriceCarreau.size()));
-
     }
 
     public void carteDeposablePileFondation(List<Carte> pilefondation) {
@@ -285,8 +273,6 @@ public class ControllerTableau extends Controller {
     }
 
     public void transfertCartePioche() {
-        System.out.println("--------------------------------TRANSFERT CARTE PIOCHE-----------------------------------");
-        System.out.println("cptPioche : " + cptPioche + " Taille pioche : "+pioche.size());
         target.getChildren().add(ivSource);
         pioche.remove(carteSource);
         if (cptPioche == 0) {
@@ -342,9 +328,6 @@ public class ControllerTableau extends Controller {
     }
 
     public void retirerCartePileFondation(List<Carte> pileFondatrice){
-        System.out.println("&&&&&&&&&&&&&&&&&& Carte d'une pile fondation déplacé vers le plateau");
-        System.out.println("source.getParent " + source.getParent() + " target.getParent " + target.getParent());
-        System.out.println("source " + source.getId() + " target " + target.getId());
 
         Carte carteDessousPileFondation = null;
         ImageView nouvelleImgfondation = creerImageView(creerImage("pioche.png"));
@@ -353,7 +336,6 @@ public class ControllerTableau extends Controller {
         for(int i =0;i< paquet.size();i++){
             if(paquet.get(i).getValeur_carte()+1==carteSource.getValeur_carte() && paquet.get(i).getCouleur_carte().equals(carteSource.getCouleur_carte())){
                 carteDessousPileFondation = paquet.get(i);
-                System.out.println("UserData de la carte à afficher à la place de la carte fondation = "+paquet.get(i));
             }
         }
         if (carteDessousPileFondation != null) {
@@ -390,7 +372,6 @@ public class ControllerTableau extends Controller {
         }
         // partie gagné si toutes les cartes sont rangé dans les pile fondation
         if((pileFondatriceCarreau.size()==13&& pileFondatriceCoeur.size()==13&&pileFondatriceTrefle.size()==13&&pileFondatricePique.size()==13)||!(l.contains(false))){
-            System.out.println("FIN DE PARTIE");
             return true;
         }
         
@@ -398,13 +379,11 @@ public class ControllerTableau extends Controller {
     }
     
     public void rejouerPartie() {
-    	System.out.println("appelle à rejouerPartie");
     	controllerAccueil.setChoix(1);
 		controllerAccueil.choisirJeu();
     }
     public void retourMenu() {
     	new VueAccueil(controllerAccueil);
-    	System.out.println("appelle à retourMenu");
     }
 
 
