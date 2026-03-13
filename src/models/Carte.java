@@ -5,7 +5,7 @@ public class Carte {
 	private int valeur_carte;
 	private String couleur_carte;
 	private String img_carte;
-	private String img_carte_verso = "verso.jpg";
+	private String img_carte_verso = "verso.png";
 	private ImageCarte imageCarteAafficher;
 
 	// ----------------------- CONSTRUCTEUR ----------------------

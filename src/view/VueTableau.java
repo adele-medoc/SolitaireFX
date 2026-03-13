@@ -18,14 +18,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import models.Carte;
 import models.ImageCarte;
 import utilitaire.Utility;
@@ -41,6 +37,7 @@ public class VueTableau {
 
 	List<Carte> cartePioche;
 	List<Carte> carteSurTableau;
+
 
 	BorderPane root = new BorderPane();
 	VBox top = new VBox();
@@ -90,7 +87,8 @@ public class VueTableau {
             	new VueAccueil(controllerAccueil);
             }
         });
-		retourMenu.getStyleClass().add("boutonTableau");
+		retourMenu.getStyleClass().add("bouton");
+		retourMenu.setId("boutonTableau");
 		navBar.getChildren().add(retourMenu);
 		
 		pioche.getChildren().addAll(cartesCachePioche,carteDevoilePioche);
@@ -101,14 +99,33 @@ public class VueTableau {
 		pileFondation.setSpacing(10);
 		pileFondation.setPadding(new Insets(0, 40, 0, 0));
 
+		listColl.add(colonne1);
+		colonne1.setId("colonne1");
+
+		listColl.add(colonne2);
+		colonne2.setId("colonne2");
+
+		listColl.add(colonne3);
+		colonne3.setId("colonne3");
+
+		listColl.add(colonne4);
+		colonne4.setId("colonne4");
+
+		listColl.add(colonne5);
+		colonne5.setId("colonne5");
+
+		listColl.add(colonne6);
+		colonne6.setId("colonne6");
+
+		listColl.add(colonne7);
+		colonne7.setId("colonne7");
+
 			for(int i=0;i<7;i++) {
 				for(int j=0;j< i+1;j++) {
 					ImageView iv = Utility.creerImageViewCarteVerso(carteSurTableau.get(index));
-                    assert iv != null;
-//					iv.setTranslateY(-(Y_OFFSET * j));
-
-						listColl.get(i).getChildren().add(iv);
-						index++;
+					//iv.getStyleClass().add("cartes");
+					listColl.get(i).getChildren().add(iv);
+					index++;
 				}
 			}
 
@@ -147,7 +164,7 @@ public class VueTableau {
 		hautTableauJeu.setId("hautTableauJeu");
 		basTableauJeu.setId("basTableauJeu");
 
-		cartesCachePioche.getChildren().add(Utility.creerImageView(Utility.creerImage("verso.jpg")));
+		cartesCachePioche.getChildren().add(Utility.creerImageView(Utility.creerImage("verso.png")));
 		carteDevoilePioche.getChildren().add(Utility.creerImageView(Utility.creerImage("pioche.png")));
 		carteDevoilePioche.setPrefHeight(250);
 
@@ -166,26 +183,7 @@ public class VueTableau {
 
 		carteDevoilePioche.setId("pioche");
 
-		listColl.add(colonne1);
-		colonne1.setId("colonne1");
 
-		listColl.add(colonne2);
-		colonne2.setId("colonne2");
-
-		listColl.add(colonne3);
-		colonne3.setId("colonne3");
-
-		listColl.add(colonne4);
-		colonne4.setId("colonne4");
-
-		listColl.add(colonne5);
-		colonne5.setId("colonne5");
-
-		listColl.add(colonne6);
-		colonne6.setId("colonne6");
-
-		listColl.add(colonne7);
-		colonne7.setId("colonne7");
 
 		for (VBox col : listColl) {
 			col.setSpacing(-200);
@@ -202,11 +200,22 @@ public class VueTableau {
 		basTableauJeu.add(colonne6, 5, 0);
 		basTableauJeu.add(colonne7, 6, 0);
 		basTableauJeu.setAlignment(Pos.TOP_CENTER);
+		basTableauJeu.setStyle("-fx-hgap: 10;");
 
 
 		root.setTop(top);
 		root.setCenter(basTableauJeu);
-		root.getStyleClass().add("bg");
+
+		try {
+			BackgroundImage bgImg = new BackgroundImage(new Image(getClass().getResource("/images/fondSolitaire1.png").toExternalForm()),null,null,null,null);
+			Background bg = new Background(bgImg);
+			root.setBackground(bg);
+		} catch (Exception e) {
+			throw new RuntimeException("L'image de background n'a pas pu être ajouté "+e.getMessage());
+		}
+
+
+
 	    root.setPadding(new Insets(0, 20, 0, 20));
 
 		/* ****************** set de la scene sur la stage ****************** */
@@ -235,7 +244,7 @@ public class VueTableau {
 				controllerTableau.setCptPioche(controllerTableau.getCptPioche() + 1);
 
 				if(cartePioche.size()==1 && controllerTableau.getCptPioche()==0){
-
+//					System.out.println("----------------------------------------Pioche vide et clear appellé !!! ");
 					cartesCachePioche.getChildren().clear();
 				}
 				ImageView imageViewCarteDePioche = (ImageView) carteDevoilePioche.getChildren().getFirst();
@@ -270,7 +279,7 @@ public class VueTableau {
 			VBox colonne = listColl.get(i);
 			//Si la colonne est vide on ajoute l'imageView de carte vide pour pouvoir ajouter un roi dessus
 			if(colonne.getChildren().isEmpty()){
-				ImageView imageViewPile = creerImageView(creerImage("pioche.png"));
+				ImageView imageViewPile = creerImageView(creerImage("pileVide.png"));
 				imageViewPile.setId("carteVide_"+colonne.getId());
 				colonne.getChildren().add(imageViewPile);
 				continue;
@@ -374,8 +383,17 @@ public class VueTableau {
 	      dialog.setContentText("Que voulez-vous faire ?");
 
 	      dialog.getDialogPane().getButtonTypes().addAll(boutonRejouer,boutonMenu);
+		  dialog.getDialogPane().getStyleClass().add("dialogVictoire");
+		  try {
+			  dialog.getDialogPane().getStylesheets().add(getClass().getResource("/application/application.css").toExternalForm());
+			  dialog.setGraphic(new ImageView(
+					  new Image(getClass().getResource("/images/trophee.png").toExternalForm())
+			  ));
+		  } catch (Exception e) {
+			  throw new RuntimeException("Le style n'a pas pu être ajouté à la dialog : "+ e.getMessage());
+		  }
 
-	      dialog.showAndWait().ifPresent(response -> {
+		dialog.showAndWait().ifPresent(response -> {
 	    	  if (response == boutonRejouer) {
 	    		  controllerTableau.rejouerPartie();
 	    	  }else if (response == boutonMenu) {

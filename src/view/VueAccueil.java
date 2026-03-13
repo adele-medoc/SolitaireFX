@@ -26,17 +26,19 @@ public class VueAccueil {
 		VBox buttonVb = new VBox();
 		Button buttonJouer = new Button("Jouer");
 		Button buttonScore = new Button("Meilleur Score");
-		buttonJouer.getStyleClass().add("boutonAccueil");
-		buttonScore.getStyleClass().add("boutonAccueil");
+		buttonJouer.getStyleClass().add("bouton");
+		buttonJouer.setId("boutonAccueil");
+		buttonScore.getStyleClass().add("bouton");
 
 		try {
 
-				Image img = new Image(getClass().getResource("/images/fondSolitaire.png").toExternalForm());
+				Image img = new Image(getClass().getResource("/images/fondMenu.png").toExternalForm());
 				ImageView iv = new ImageView(img);
 				accueil.getChildren().add(iv);
 
 				Image imgTitre = new Image(getClass().getResource("/images/titre1.png").toExternalForm());
 				ImageView ivTitre = new ImageView(imgTitre);
+				ivTitre.setId("imgAccueil");
 				buttonVb.getChildren().add(ivTitre);
 
 		}catch(Exception e) {
@@ -62,7 +64,8 @@ public class VueAccueil {
         });
 
 		// ----------------------- STYLE DE LA VUE -------------------------
-		buttonVb.getChildren().addAll(buttonJouer,buttonScore);
+//		buttonVb.getChildren().addAll(buttonJouer,buttonScore);
+		buttonVb.getChildren().add(buttonJouer);
 		buttonVb.setAlignment(Pos.CENTER);
 		buttonVb.setSpacing(15);
 

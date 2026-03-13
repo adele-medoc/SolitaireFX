@@ -35,88 +35,105 @@
 	 -fx-spacing: 15; 
 }
 
-.boutonAccueil{
-	-fx-background-color: linear-gradient(to bottom, #FFD94A, #FFC808);
+.bouton{
+	-fx-background-color: #FFC808;
+	-fx-text-fill: #FFF9EB;
 	-fx-text-alignment: center;
 	-fx-font-weight: bold;
-	-fx-text-fill: #FFF9EB;
 	-fx-border-radius: 8px;
+	-fx-border-style: none;
 	-fx-background-radius: 8px;
-	-fx-font-size: 50px;
 	-fx-cursor: hand;
-	-fx-padding: 2px 3px 2px 3px;
+	-fx-effect: dropshadow(gaussian, #c58009, 0, 0, 0, 10);
 	
 }
 
-.boutonAccueil:hover {
-	-fx-background-color: linear-gradient(to bottom, #FBC02D, #F9B918);
+.bouton:hover {
+	-fx-background-color: #FFB208;
 	-fx-text-fill: #f5f5f5;
 	-fx-background-radius: 8px;
 	-fx-border-radius: 8px;
-	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.3, 3, 3);
-    -fx-scale-x: 1.05; 
-    -fx-scale-y: 1.05;
 }
 
-.boutonAccueil:pressed {
-	-fx-background-color: #F3AA27;
-    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.6), 8, 0.3, 2, 2);
-    -fx-scale-x: 1.00;
-    -fx-scale-y: 1.00;
+.bouton:pressed {
+	-fx-background-color: #FFB208;
+	-fx-effect: dropshadow(gaussian, #c58009, 0, 0, 0, 0);
+	-fx-translate-y: 5;
+}
+
+#boutonAccueil{
+	-fx-font-size:5em;
+	-fx-padding: 8px 8px;
+	-fx-border-radius: 15px;
+	-fx-background-radius:15px;
+
+}
+
+#boutonTableau{
+	-fx-font-size:2em;
+	-fx-padding: 10px 15px;
+	-fx-border-insets: 5px;
+	-fx-background-insets: 5px;
+
 }
 
 /* --------------------- Tableau Solitaire ------------------------------- */
+ImageView{
+	-fx-effect: dropshadow(gaussian, #BFD181, 6, 0.3, 2, 3);
+}
+#imgAccueil{
+	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 0, 0, 0, 0);
+}
 
 #VboxPioche{
 	-fx-padding : 10px;
 }
 
-.boutonTableau{
-	-fx-background-color: linear-gradient(to bottom, #FFD94A, #FFC808);
-	-fx-text-alignment: center;
-	-fx-text-fill: #FFF9EB;
-	-fx-border-radius: 8px;
-	-fx-background-radius: 8px;
-	-fx-font-size: 2em;
-	-fx-font-weight: bold;
-	-fx-cursor: hand;
-	-fx-padding: 1px 2px 1px 2px;
-	
-}
 
-.boutonTableau:hover {
-	-fx-background-color: linear-gradient(to bottom, #FBC02D, #F9B918);
-	-fx-text-fill: #f5f5f5;
-	-fx-background-radius: 8px;
-	-fx-border-radius: 8px;
-	-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0.3, 3, 3);
-    -fx-scale-x: 1.05; 
-    -fx-scale-y: 1.05;
-}
-
-.boutonTableau:pressed {
-	-fx-background-color: #F3AA27;
-    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.6), 8, 0.3, 2, 2);
-    -fx-scale-x: 1.00;
-    -fx-scale-y: 1.00;
+.dialogVictoire .header-panel{
+	-fx-background-color : linear-gradient(to bottom, #ebffa9, #ffd77e);
 }
 
 .dialogVictoire {
-    -fx-background-color: black;
+	-fx-background-color : linear-gradient(to bottom,#ebffa9, #b8ff56);
 }
 
-.dialog-pane .label {
-    -fx-text-fill: white;
+.dialogVictoire .label {
+    -fx-text-fill: black;
+	-fx-font-size: 16px;
+	-fx-font-weight: bold;
 }
 
-.dialogVictoire:header .header-panel {
-    -fx-background-color: black;
+.dialogVictoire .button{
+	-fx-background-color: #FFC808;
+	-fx-text-fill: #FFF9EB;
+	-fx-text-alignment: center;
+	-fx-border-radius: 8px;
+	-fx-border-style: none;
+	-fx-background-radius: 8px;
+	-fx-font-weight: bold;
+	-fx-cursor: hand;
+	-fx-effect: dropshadow(gaussian, #c58009, 0, 0, 0, 10);
+	-fx-font-size:1.5em;
+	-fx-padding: 10px 15px;
+}
+.dialogVictoire .button:hover{
+	-fx-background-color: #FFB208;
+	-fx-text-fill: #f5f5f5;
+	-fx-font-weight: bold;
+	-fx-background-radius: 8px;
+	-fx-border-radius: 8px;
+}
+.dialogVictoire .button:pressed{
+	-fx-background-color: #FFB208;
+	-fx-effect: dropshadow(gaussian, #c58009, 0, 0, 0, 0);
+	-fx-translate-y: 5;
+}
+.dialogVictoire .button-bar{
+	-fx-padding: 10 10 45 10;
+
 }
 
-.dialog-pane:header .header-panel .label {
-    -fx-font-style: italic;
-    -fx-font-size: 2em;
-}
 
 
 
