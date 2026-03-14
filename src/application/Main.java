@@ -35,8 +35,8 @@ public class Main extends Application {
 			primaryStage = stage;
 			double largeur = Screen.getPrimary().getBounds().getWidth();
 	        double hauteur = Screen.getPrimary().getBounds().getHeight();
-			primaryStage.setWidth(largeur);
-	        primaryStage.setHeight(hauteur);
+			primaryStage.setWidth(largeur-70);
+	        primaryStage.setHeight(hauteur-70);
 	        primaryStage.setTitle("Solitaire");
 			primaryStage.show();
 			
