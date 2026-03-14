@@ -1,4 +1,5 @@
 Solitaire – Java / JavaFX 🇬🇧
+![](https://github.com/adele-medoc/SolitaireFX/blob/main/src/images/gif_solitaire.gif)
 
 Why Solitaire games are so ugly ? Personally, I decided to create the cutest solitaire game ever! 
 
